@@ -19,4 +19,11 @@ module.exports = {
   delete: async (key) => {
     await collection.deleteOne({ _id: key })
   },
+  // Add this function to return the document count
+  getStats: async () => {
+    const count = await collection.countDocuments();
+    return {
+        entries: count,
+    };
+  },
 }

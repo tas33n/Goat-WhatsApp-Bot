@@ -24,4 +24,9 @@ module.exports = {
     if (!db) throw new Error("Database not connected.")
     return db.delete(key)
   },
+  // Add this new function to get database statistics
+  getStats: () => {
+    if (!db) throw new Error("Database not connected.");
+    return db.getStats();
+  }
 }

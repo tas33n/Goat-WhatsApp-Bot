@@ -1,4 +1,4 @@
-require('module-alias/register');
+require("module-alias/register");
 const chalk = require("chalk");
 const { logger } = require("./libs/logger");
 const config = require("./config.json");
@@ -9,7 +9,6 @@ const path = require("path");
 const inquirer = require("inquirer");
 const fs = require("fs-extra");
 const { connect, AUTH_ERROR } = require("./bot/connect");
-
 
 // Track restart attempts to prevent infinite loops
 let restartAttempts = 0;
@@ -131,7 +130,9 @@ function startServer() {
   if (server) return;
   const PORT = process.env.PORT || 3000;
   const app = initializeApp();
-  server = app.listen(PORT, () => logger.info(`📊 Dashboard available at http://localhost:${PORT}`));
+  server = app.listen(PORT, () =>
+    logger.info(`📊 Dashboard available at http://localhost:${PORT}`)
+  );
 
   server.on("error", (error) => {
     if (error.code === "EADDRINUSE") {
@@ -146,7 +147,7 @@ function startServer() {
 async function connectDatabase() {
   try {
     await db.connect(config.database);
-    logger.info("✅ Database connected successfully.");
+    // logger.info("✅ Database connected successfully.");
     return true;
   } catch (error) {
     logger.error("❌ Database connection failed:", error);
@@ -197,11 +198,15 @@ async function ensureAuthenticated() {
         global.GoatBot.authMethod = await promptLoginMethod();
       } else {
         if (restartAttempts >= MAX_RESTART_ATTEMPTS) {
-          console.error(chalk.red(`❌ Max restart attempts (${MAX_RESTART_ATTEMPTS}) reached. Exiting.`));
+          console.error(
+            chalk.red(`❌ Max restart attempts (${MAX_RESTART_ATTEMPTS}) reached. Exiting.`)
+          );
           process.exit(1);
         }
         restartAttempts++;
-        console.error(chalk.yellow(`⚠️ Restart attempt ${restartAttempts}/${MAX_RESTART_ATTEMPTS}`));
+        console.error(
+          chalk.yellow(`⚠️ Restart attempt ${restartAttempts}/${MAX_RESTART_ATTEMPTS}`)
+        );
         gracefulRestart();
       }
     }
@@ -216,7 +221,9 @@ function invalidateSessionAndRestart() {
   ensureAuthenticated().catch((e) => {
     console.error(chalk.red("❌ ensureAuthenticated failed after manual restart:"), e.message);
     if (restartAttempts >= MAX_RESTART_ATTEMPTS) {
-      console.error(chalk.red(`❌ Max restart attempts (${MAX_RESTART_ATTEMPTS}) reached. Exiting.`));
+      console.error(
+        chalk.red(`❌ Max restart attempts (${MAX_RESTART_ATTEMPTS}) reached. Exiting.`)
+      );
       process.exit(1);
     }
     restartAttempts++;
@@ -226,7 +233,11 @@ function invalidateSessionAndRestart() {
 }
 
 function gracefulRestart() {
-  console.log(chalk.yellow(`🔄 Initiating graceful restart (attempt ${restartAttempts + 1}/${MAX_RESTART_ATTEMPTS}) …`));
+  console.log(
+    chalk.yellow(
+      `🔄 Initiating graceful restart (attempt ${restartAttempts + 1}/${MAX_RESTART_ATTEMPTS}) …`
+    )
+  );
   if (server) {
     server.close(() => console.log(chalk.yellow("🔌 Server closed.")));
   }
@@ -239,7 +250,6 @@ async function start() {
 
   // Restore logger level after authentication
   logger.setLevel(originalLoggerLevel);
-  logger.info("🚀 Initialising GOAT WhatsApp Bot …");
 
   // Connect database
   if (!(await connectDatabase())) process.exit(1);
@@ -249,7 +259,34 @@ async function start() {
 
   // Flag ready
   global.GoatBot.initialized = true;
-  logger.info("🎉 GOAT Bot is now online and ready! Enjoy! ✨");
+
+  printStartupSummary();
+}
+
+async function printStartupSummary() {
+  const { user, commands, events } = global.GoatBot;
+  const botName = user.name || config.botName || "GoatBot";
+  const botNumber = user.id?.split(":")[0] || "Not available";
+  const dbStats = await db.getStats(); // This will now work
+
+  logger.info(chalk.yellow("\n" + "=".repeat(50)));
+  logger.info(chalk.cyan.bold(`           🐐 GOAT BOT INITIALIZED 🐐`));
+  logger.info(chalk.yellow("=".repeat(50)));
+
+  logger.info(chalk.white(`- Bot Name:     ${chalk.green(botName)}`));
+  logger.info(chalk.white(`- Bot Number:   ${chalk.green(botNumber)}`));
+  logger.info(chalk.white(`- Prefix:       ${chalk.green(config.prefix)}`));
+
+  logger.info(chalk.cyan.bold(`--- Database ---`));
+  logger.info(chalk.white(`- Type:         ${chalk.green(config.database.type)}`));
+  logger.info(chalk.white(`- Entries:      ${chalk.green(dbStats.entries)}`));
+
+  logger.info(chalk.cyan.bold(`--- Plugins ---`));
+  logger.info(chalk.white(`- Commands:     ${chalk.green(commands.size)} loaded`));
+  logger.info(chalk.white(`- Events:       ${chalk.green(events.size)} loaded`));
+
+  logger.info(chalk.yellow("\n" + "=".repeat(50)));
+  logger.info("🎉 Bot is now online and ready to use!");
 }
 
 start().catch((err) => {
@@ -286,7 +323,12 @@ process.on("uncaughtException", (error) => {
 });
 
 process.on("unhandledRejection", (reason, promise) => {
-  console.error(chalk.red("💥 Unhandled Rejection at:"), promise, "reason:", reason.message || reason);
+  console.error(
+    chalk.red("💥 Unhandled Rejection at:"),
+    promise,
+    "reason:",
+    reason.message || reason
+  );
   global.GoatBot.stats.errors++;
   if (restartAttempts >= MAX_RESTART_ATTEMPTS) {
     console.error(chalk.red(`❌ Max restart attempts (${MAX_RESTART_ATTEMPTS}) reached. Exiting.`));

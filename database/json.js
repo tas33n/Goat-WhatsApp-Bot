@@ -1,5 +1,6 @@
 const fs = require("fs").promises
 const path = require("path")
+
 const dbPath = path.join(__dirname, "data.json")
 
 let data = {}
@@ -25,5 +26,11 @@ module.exports = {
   delete: async (key) => {
     delete data[key]
     await fs.writeFile(dbPath, JSON.stringify(data, null, 2))
+  },
+  // Add this function to return the number of keys
+  getStats: () => {
+    return Promise.resolve({
+      entries: Object.keys(data).length,
+    });
   },
 }

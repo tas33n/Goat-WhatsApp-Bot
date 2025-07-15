@@ -95,7 +95,7 @@ async function startConnection(phoneNumber = null, resolve, reject) {
     logger.info(`Using Baileys version: ${version.join(".")}`);
 
     if (!global.GoatBot.waitingForAuth) {
-      authManager?.showConnectionStatus("connecting");
+      // authManager?.showConnectionStatus("connecting");
     }
 
     const connectionOptions = {
@@ -213,8 +213,8 @@ async function startConnection(phoneNumber = null, resolve, reject) {
         connectionAttempts = 0;
 
         authManager?.showConnectionStatus("connected");
-        authManager?.showSuccess();
-        
+        // authManager?.showSuccess();
+
         global.GoatBot.user = sock.user;
         global.GoatBot.isConnected = true;
         global.GoatBot.sessionValid = true;

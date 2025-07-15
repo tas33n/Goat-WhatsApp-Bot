@@ -16,13 +16,8 @@ module.exports = {
 
   onCmd: async ({ api, message, reply }) => {
     const startTime = Date.now();
-    // The initial reply is enough to measure latency from the user's perspective.
     const sentMsg = await reply("Pinging..."); 
     const latency = Date.now() - startTime;
-    
-    // The sleep here isn't necessary for a ping command, it just adds an artificial delay.
-    // I've kept it as it was in your file, but you might consider removing it.
-    await sleep(1000); 
 
     await api.sendMessage(message.key.remoteJid, {
       text: `🏓 Pong!\nLatency: ${latency}ms`,
