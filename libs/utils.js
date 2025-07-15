@@ -1,5 +1,3 @@
-// This file is for shared utility functions.
-
 /**
  * Sleeps for a specified amount of time.
  * @param {number} ms - The number of milliseconds to sleep.

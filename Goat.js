@@ -1,4 +1,4 @@
-// Goat.js
+require('module-alias/register');
 const chalk = require("chalk");
 const { logger } = require("./libs/logger");
 const config = require("./config.json");

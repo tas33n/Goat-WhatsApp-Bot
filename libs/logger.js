@@ -1,43 +1,39 @@
-const pino = require("pino");
+const winston = require('winston');
 
-const pinoLogger = pino({
-  level: process.env.LOG_LEVEL || "info", // Default to 'info', can be set to 'silent'
-  transport: {
-    target: "pino-pretty",
-    options: {
-      colorize: true,
-      ignore: "pid,hostname",
-      translateTime: "SYS:dd-mm-yyyy HH:mm:ss", // Fixed MM to mm for minutes
-      // Ensure Unicode support for emojis
-      sync: true, // Ensures immediate output to handle emojis correctly
-      colorizeObjects: true, // Helps with formatting complex objects
-    },
-  },
+// Define the custom format for the console.
+const customFormat = winston.format.combine(
+  winston.format.colorize(),
+  winston.format.timestamp({ format: 'DD-MM-YYYY HH:mm:ss' }),
+  winston.format.splat(), // Necessary to correctly format error objects
+  winston.format.printf((info) => {
+    // Check if the message is an error object
+    if (info instanceof Error) {
+      return `[${info.timestamp}] ${info.level}: ${info.message}\n${info.stack}`;
+    }
+    // Check for error objects in the splat
+    const splat = info[Symbol.for('splat')];
+    if (splat && splat.length > 0 && splat[0] instanceof Error) {
+        const error = splat[0];
+        return `[${info.timestamp}] ${info.level}: ${info.message}\n${error.stack}`;
+    }
+    return `[${info.timestamp}] ${info.level}: ${info.message}`;
+  })
+);
+
+// Create the logger instance.
+const logger = winston.createLogger({
+  level: process.env.LOG_LEVEL || 'info',
+  transports: [
+    new winston.transports.Console({
+      format: customFormat,
+    }),
+  ],
 });
 
-// Custom logger wrapper to respect silent mode and ensure emoji compatibility
-const logger = {
-  level: "info", // Default level, can be changed dynamically
-  info: (msg, ...args) => {
-    if (logger.level !== "silent") {
-      pinoLogger.info(msg, ...args);
-    }
-  },
-  error: (msg, ...args) => {
-    if (logger.level !== "silent") {
-      pinoLogger.error(msg, ...args);
-    }
-  },
-  warn: (msg, ...args) => {
-    if (logger.level !== "silent") {
-      pinoLogger.warn(msg, ...args);
-    }
-  },
-  // Method to set log level dynamically
-  setLevel: (level) => {
-    logger.level = level;
-    pinoLogger.level = level; // Sync with pino's level
-  },
+// Method to set log level dynamically if needed
+logger.setLevel = (level) => {
+  logger.level = level;
 };
+
 
 module.exports = { logger };

@@ -9,7 +9,7 @@
     }
   },
   "logCommands": true,
-  "antiInbox": true,
+  "antiInbox": false,
   "whitelist": [],
   "blacklist": []
 }

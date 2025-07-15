@@ -3,25 +3,28 @@ const {
   useMultiFileAuthState,
   DisconnectReason,
   fetchLatestBaileysVersion,
-} = require("@whiskeysockets/baileys")
-const { Boom } = require("@hapi/boom")
-const pino = require("pino")
-const qrcode = require("qrcode-terminal")
-const chalk = require("chalk")
-const config = require("../config.json")
-const { logger } = require("../libs/logger")
-const loadPlugins = require("./loader")
-const messageHandler = require("./handler")
-const AuthManager = require("./auth")
-const fs = require("fs-extra")
-const path = require("path")
+} = require("@whiskeysockets/baileys");
+const { Boom } = require("@hapi/boom");
+const pino = require("pino");
+const qrcode = require("qrcode-terminal");
+const chalk = require("chalk");
+const config = require("../config.json");
+const { logger } = require("../libs/logger");
+const loadPlugins = require("./loader");
+const messageHandler = require("./handler");
+const AuthManager = require("./auth");
+const fs = require("fs-extra");
+const path = require("path");
 
 let sock;
 let authManager;
 let connectionAttempts = 0;
 const MAX_CONNECTION_ATTEMPTS = 3;
 
-async function connect() {
+// Export AUTH_ERROR for use in Goat.js
+module.exports.AUTH_ERROR = new Boom("AUTH", { statusCode: 401 });
+
+async function connect({ method } = {}) {
   return new Promise(async (resolve, reject) => {
     try {
       authManager = new AuthManager();
@@ -35,12 +38,12 @@ async function connect() {
       // Check for existing session
       const hasValidSession = await authManager.checkSession();
 
-      if (!hasValidSession) {
+      if (!hasValidSession || method) {
         global.GoatBot.connectionStatus = "waiting_for_auth";
         global.GoatBot.waitingForAuth = true;
 
-        // Show authentication menu and wait for user selection
-        const authMethod = await authManager.showAuthMenu();
+        // Use provided method or show auth menu
+        const authMethod = method || (await authManager.showAuthMenu());
 
         // Process user selection
         switch (authMethod) {
@@ -70,7 +73,7 @@ async function connect() {
       }
     } catch (error) {
       authManager?.showError("Failed to initialize authentication", error);
-      global.GoatStats.errors++;
+      global.GoatBot.stats.errors++;
       reject(error);
     }
   });
@@ -91,7 +94,6 @@ async function startConnection(phoneNumber = null, resolve, reject) {
 
     logger.info(`Using Baileys version: ${version.join(".")}`);
 
-    // Only show connecting status if we're not waiting for auth
     if (!global.GoatBot.waitingForAuth) {
       authManager?.showConnectionStatus("connecting");
     }
@@ -101,31 +103,28 @@ async function startConnection(phoneNumber = null, resolve, reject) {
       logger: pino({ level: "silent" }),
       version,
       printQRInTerminal: false,
-      connectTimeoutMs: 30000, // 30 seconds timeout
-      qrTimeout: 45000, // 45 seconds QR timeout
+      connectTimeoutMs: 30000,
+      qrTimeout: 45000,
       retryRequestDelayMs: 1000,
       maxMsgRetryCount: 5,
       browser: ["GoatBot", "Chrome", "1.0.0"],
       generateHighQualityLinkPreview: true,
     };
 
-    // Add pairing code option if phone number provided
     if (phoneNumber) {
       connectionOptions.mobile = true;
     }
 
     sock = makeWASocket(connectionOptions);
 
-    // Connection timeout handler
     const connectionTimeout = setTimeout(() => {
       if (!global.GoatBot.isConnected) {
         authManager?.showConnectionStatus("timeout");
         authManager?.showError("Connection timeout. Please try again.");
         reject(new Error("Connection timeout"));
       }
-    }, 60000); // 60 second timeout
+    }, 60000);
 
-    // Handle pairing code
     if (phoneNumber) {
       sock.ev.on("connection.update", async (update) => {
         if (update.qr) {
@@ -148,7 +147,14 @@ async function startConnection(phoneNumber = null, resolve, reject) {
 
       if (qr && !phoneNumber) {
         authManager?.showConnectionStatus("qr_ready");
-        qrcode.generate(qr, { small: true });
+        // Dynamically adjust QR code size based on console width
+        const consoleWidth = process.stdout.columns || 80; // Default to 80 if undefined
+        const qrSize = Math.min(Math.floor(consoleWidth / 2), 30); // Limit to half console width or 20 chars
+        qrcode.generate(qr, {
+          small: true,
+          // Custom size adjustment (reduce module size for compactness)
+          size: qrSize,
+        });
         console.log(chalk.cyan("👆 Scan the QR code above with WhatsApp"));
         console.log(chalk.yellow("📱 WhatsApp > Settings > Linked Devices > Link a Device\n"));
       }
@@ -188,7 +194,6 @@ async function startConnection(phoneNumber = null, resolve, reject) {
           global.GoatBot.isConnected = false;
           global.GoatBot.connectionStatus = "reconnecting";
 
-          // Retry connection with exponential backoff
           const retryDelay = Math.min(1000 * Math.pow(2, connectionAttempts - 1), 10000);
           setTimeout(() => {
             startConnection(phoneNumber, resolve, reject);
@@ -205,17 +210,17 @@ async function startConnection(phoneNumber = null, resolve, reject) {
         global.GoatBot.connectionStatus = "connecting";
       } else if (connection === "open") {
         clearTimeout(connectionTimeout);
-        connectionAttempts = 0; // Reset attempts counter on successful connection
+        connectionAttempts = 0;
 
         authManager?.showConnectionStatus("connected");
         authManager?.showSuccess();
-
+        
+        global.GoatBot.user = sock.user;
         global.GoatBot.isConnected = true;
         global.GoatBot.sessionValid = true;
         global.GoatBot.connectionStatus = "connected";
         global.GoatBot.waitingForAuth = false;
 
-        // Load plugins only after successful connection
         logger.info("📦 Loading plugins...");
         try {
           loadPlugins(logger);
@@ -226,20 +231,16 @@ async function startConnection(phoneNumber = null, resolve, reject) {
 
         logger.info("🎉 Bot is ready to use!");
 
-        // Send welcome message to bot owner
         await sendWelcomeMessage();
 
-        // Connection successful, resolve the promise
         resolve(sock);
       }
     });
 
     sock.ev.on("creds.update", saveCreds);
 
-    // Enhanced message handler with error handling
     sock.ev.on("messages.upsert", async (m) => {
       try {
-        // Only process messages if we're connected
         if (!global.GoatBot.isConnected) return;
 
         const msg = m.messages[0];
@@ -254,10 +255,8 @@ async function startConnection(phoneNumber = null, resolve, reject) {
       }
     });
 
-    // Enhanced group events handler
     sock.ev.on("group-participants.update", async (update) => {
       try {
-        // Only process events if we're connected
         if (!global.GoatBot.isConnected) return;
 
         const welcomeEvent = global.GoatBot.events.get("welcome");
@@ -275,7 +274,6 @@ async function startConnection(phoneNumber = null, resolve, reject) {
       }
     });
 
-    // Handle call events
     sock.ev.on("call", async (callInfo) => {
       try {
         for (const call of callInfo) {
@@ -289,11 +287,9 @@ async function startConnection(phoneNumber = null, resolve, reject) {
       }
     });
 
-    // Handle presence updates
     sock.ev.on("presence.update", async (presenceUpdate) => {
       try {
         // Handle presence updates if needed
-        // This can be used for online/offline status tracking
       } catch (error) {
         logger.error("❌ Error handling presence update:", error);
       }
