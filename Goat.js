@@ -8,7 +8,9 @@ const cors = require("cors");
 const path = require("path");
 const inquirer = require("inquirer");
 const fs = require("fs-extra");
+const chokidar = require("chokidar");
 const { connect, AUTH_ERROR } = require("./bot/connect");
+const { loadPlugins, loadCommand, unloadCommand, loadEvent, unloadEvent } = require("./bot/loader");
 
 // Track restart attempts to prevent infinite loops
 let restartAttempts = 0;
@@ -17,10 +19,10 @@ const MAX_RESTART_ATTEMPTS = 3;
 const banner = `
  ██████╗  ██████╗  █████╗ ████████╗
 ██╔════╝ ██╔═══██╗██╔══██╗╚══██╔══╝
-██║  ███╗██║   ██║███████║   ██║   
-██║   ██║██║   ██║██╔══██║   ██║   
-╚██████╔╝╚██████╔╝██║  ██║   ██║   
- ╚═════╝  ╚═════╝ ╚═╝  ╚═╝   ╚═╝   
+██║  ███╗██║   ██║███████║   ██║
+██║   ██║██║   ██║██╔══██║   ██║
+╚██████╔╝╚██████╔╝██║  ██║   ██║
+ ╚═════╝  ╚═════╝ ╚═╝  ╚═╝   ╚═╝
         Made by Anonymous
 `;
 
@@ -52,7 +54,7 @@ global.GoatBot = {
 
 // Temporarily silence logger during authentication
 const originalLoggerLevel = logger.level;
-logger.setLevel("silent");
+logger.setLevel("debug");
 
 async function promptLoginMethod() {
   printBanner();
@@ -244,15 +246,60 @@ function gracefulRestart() {
   process.exit(2);
 }
 
+function watchPlugins() {
+  const pluginPath = path.join(__dirname, "plugins");
+  const watcher = chokidar.watch(pluginPath, {
+    persistent: true,
+    ignoreInitial: true,
+  });
+
+  watcher.on("add", (filePath) => {
+    logger.info(`➕ New file detected: ${path.basename(filePath)}`);
+    if (filePath.includes("commands")) {
+      loadCommand(filePath, logger);
+    } else if (filePath.includes("events")) {
+      loadEvent(filePath, logger);
+    }
+  });
+
+  watcher.on("change", (filePath) => {
+    logger.info(`✏️ File changed: ${path.basename(filePath)}`);
+    if (filePath.includes("commands")) {
+      unloadCommand(filePath, logger);
+      loadCommand(filePath, logger);
+    } else if (filePath.includes("events")) {
+      unloadEvent(filePath, logger);
+      loadEvent(filePath, logger);
+    }
+  });
+
+  watcher.on("unlink", (filePath) => {
+    logger.info(`🗑️ File deleted: ${path.basename(filePath)}`);
+    if (filePath.includes("commands")) {
+      unloadCommand(filePath, logger);
+    } else if (filePath.includes("events")) {
+      unloadEvent(filePath, logger);
+    }
+  });
+
+  logger.info("👀 Watching for plugin changes...");
+}
+
 async function start() {
   // Defer database connection and dashboard start until after authentication
   await ensureAuthenticated();
 
+  // Connect database
+  if (!(await connectDatabase())) process.exit(1);
+
   // Restore logger level after authentication
   logger.setLevel(originalLoggerLevel);
 
-  // Connect database
-  if (!(await connectDatabase())) process.exit(1);
+  await printStartupSummary();
+
+  loadPlugins(logger);
+
+  watchPlugins();
 
   // Start dashboard
   startServer();
@@ -260,7 +307,8 @@ async function start() {
   // Flag ready
   global.GoatBot.initialized = true;
 
-  printStartupSummary();
+  logger.info(chalk.yellow("" + "=".repeat(50)));
+  logger.info("🎉 Bot is now online and ready to use!");
 }
 
 async function printStartupSummary() {
@@ -269,7 +317,7 @@ async function printStartupSummary() {
   const botNumber = user.id?.split(":")[0] || "Not available";
   const dbStats = await db.getStats(); // This will now work
 
-  logger.info(chalk.yellow("\n" + "=".repeat(50)));
+  logger.info(chalk.yellow("" + "=".repeat(50)));
   logger.info(chalk.cyan.bold(`           🐐 GOAT BOT INITIALIZED 🐐`));
   logger.info(chalk.yellow("=".repeat(50)));
 
@@ -280,13 +328,6 @@ async function printStartupSummary() {
   logger.info(chalk.cyan.bold(`--- Database ---`));
   logger.info(chalk.white(`- Type:         ${chalk.green(config.database.type)}`));
   logger.info(chalk.white(`- Entries:      ${chalk.green(dbStats.entries)}`));
-
-  logger.info(chalk.cyan.bold(`--- Plugins ---`));
-  logger.info(chalk.white(`- Commands:     ${chalk.green(commands.size)} loaded`));
-  logger.info(chalk.white(`- Events:       ${chalk.green(events.size)} loaded`));
-
-  logger.info(chalk.yellow("\n" + "=".repeat(50)));
-  logger.info("🎉 Bot is now online and ready to use!");
 }
 
 start().catch((err) => {

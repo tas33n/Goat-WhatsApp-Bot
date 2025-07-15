@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const chalk = require("chalk");
 
 function loadCommand(filePath, logger) {
   try {
@@ -82,7 +83,7 @@ function loadPlugins(logger) {
   const eventsPath = path.join(__dirname, "..", "plugins", "events");
 
   // Load Commands
-  logger.info("--- LOADING COMMANDS ---");
+  logger.info(chalk.cyan.bold(`--- Commands ---`));
   if (fs.existsSync(commandsPath)) {
     fs.readdirSync(commandsPath)
       .filter((file) => file.endsWith(".js"))
@@ -92,9 +93,10 @@ function loadPlugins(logger) {
   } else {
     logger.warn(`⚠️ Commands directory not found: ${commandsPath}`);
   }
+  logger.info(chalk.white(`- Commands:     ${chalk.green(global.GoatBot.commands.size)} loaded`));
 
   // Load Events
-  logger.info("--- LOADING EVENTS ---");
+  logger.info(chalk.cyan.bold(`--- Events ---`));
   if (fs.existsSync(eventsPath)) {
     fs.readdirSync(eventsPath)
       .filter((file) => file.endsWith(".js"))
@@ -104,6 +106,8 @@ function loadPlugins(logger) {
   } else {
     logger.warn(`⚠️ Events directory not found: ${eventsPath}`);
   }
+  logger.info(chalk.white(`- Events:       ${chalk.green(global.GoatBot.events.size)} loaded`));
+
   logger.info("-------------------------");
 }
 

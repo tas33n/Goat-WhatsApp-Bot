@@ -8,7 +8,7 @@ module.exports = {
     version: "1.0",
     author: "You",
     countDown: 5,
-    role: 0, // 0 = everyone, 1 = admin
+    role: 0, 
     description: "Check bot's response time.",
     category: "Utility",
     guide: "{pn}",

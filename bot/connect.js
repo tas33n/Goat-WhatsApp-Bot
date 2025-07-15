@@ -221,7 +221,7 @@ async function startConnection(phoneNumber = null, resolve, reject) {
         global.GoatBot.connectionStatus = "connected";
         global.GoatBot.waitingForAuth = false;
 
-        logger.info("📦 Loading plugins...");
+      /*  logger.info("📦 Loading plugins...");
         try {
           loadPlugins(logger);
           logger.info("✅ All plugins loaded successfully");
@@ -229,7 +229,7 @@ async function startConnection(phoneNumber = null, resolve, reject) {
           logger.error("❌ Failed to load some plugins:", error);
         }
 
-        logger.info("🎉 Bot is ready to use!");
+        logger.info("🎉 Bot is ready to use!"); */
 
         await sendWelcomeMessage();
 
