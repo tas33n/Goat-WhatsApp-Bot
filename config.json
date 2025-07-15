@@ -1,0 +1,15 @@
+{
+  "botName": "GeminiBot",
+  "prefix": ".",
+  "admins": ["1234567890@s.whatsapp.net"],
+  "database": {
+    "type": "json",
+    "mongodb": {
+      "uri": "mongodb://localhost:27017/whatsapp_bot"
+    }
+  },
+  "logCommands": true,
+  "antiInbox": true,
+  "whitelist": [],
+  "blacklist": []
+}
