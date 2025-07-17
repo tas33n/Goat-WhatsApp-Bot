@@ -130,8 +130,8 @@ function verifyOTP() {
     .then(data => {
         if (data.success) {
             localStorage.setItem('authToken', data.token);
-            showDashboard();
             showAlert('Login successful!', 'success');
+            showDashboard();
         } else {
             showAlert(data.message || 'Invalid OTP', 'error');
         }
@@ -541,26 +541,30 @@ function loadDashboardData() {
         apiRequest('/api/analytics/overview')
     ]).then(([users, groups, system, botInfo, analytics]) => {
         // Update stats
-        document.getElementById('totalUsers').textContent = users.total || 0;
-        document.getElementById('totalGroups').textContent = groups.total || 0;
-        document.getElementById('activeUsers').textContent = users.active || 0;
-        document.getElementById('activeGroups').textContent = groups.active || 0;
-        
-        // Update bot info
-        document.getElementById('botName').textContent = botInfo.name || 'Goat Bot';
-        document.getElementById('commandsLoaded').textContent = botInfo.commandsLoaded || 0;
-        
-        // Update analytics if available
+        const setText = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+        };
+        setText('totalUsers', users.total || 0);
+        setText('totalGroups', groups.total || 0);
+        setText('activeUsers', users.active || 0);
+        setText('activeGroups', groups.active || 0);
+        setText('botName', botInfo.name || 'Goat Bot');
+        setText('commandsLoaded', botInfo.commandsLoaded || 0);
         if (analytics) {
             updateAnalyticsDisplay(analytics);
         }
-        
-        document.getElementById('loading').style.display = 'none';
+        const loadingEl = document.getElementById('loading');
+        if (loadingEl) loadingEl.style.display = 'none';
     }).catch(error => {
         console.error('Error loading dashboard:', error);
-        document.getElementById('error').innerHTML = 'Error loading dashboard data: ' + error.message;
-        document.getElementById('error').style.display = 'block';
-        document.getElementById('loading').style.display = 'none';
+        const errorEl = document.getElementById('error');
+        if (errorEl) {
+            errorEl.innerHTML = '<div class="error-message">Error loading dashboard data: ' + (error.message || error) + '</div>';
+            errorEl.style.display = 'block';
+        }
+        const loadingEl = document.getElementById('loading');
+        if (loadingEl) loadingEl.style.display = 'none';
     });
 }
 

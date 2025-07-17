@@ -13,9 +13,9 @@ module.exports = {
     guide: "{pn} [setting] [value]\n\nSettings:\n• welcome [on/off] - Toggle welcome messages\n• antispam [on/off] - Toggle anti-spam\n• adminonly [on/off] - Admin only mode\n• info - Show thread information"
   },
   
-  onCmd: async function ({ api, message, args, db, logger, config, reply }) {
+  onCmd: async function ({ api, message, args, db, logger, config, reply, event }) {
     try {
-      const threadId = message.key.remoteJid;
+      const threadId = event.threadID;
       const isGroup = threadId.endsWith("@g.us");
       
       if (!isGroup) {
