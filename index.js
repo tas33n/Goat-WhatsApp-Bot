@@ -1,21 +1,27 @@
+/*
+Name: Goat-WhatsApp-Bot
+Description: A WhatsApp bot built with Node.js, designed to automate tasks and provide various functionalities
+Author: Mohammad Alamin & Taseen
+Version: 1.0.0
+License: MIT
+Repository: https://github.com/anbuinfosec/Goat-WhatsApp-Bot
+*/
+
 const { spawn } = require("child_process")
 const path = require("path")
 const { logger } = require("./libs/logger")
 
 function startBot() {
-  // Clear console before starting to prevent duplicate output
   console.clear()
-
   const child = spawn("node", ["Goat.js"], {
     cwd: __dirname,
-    stdio: "inherit", // This ensures the child process shares the same terminal
+    stdio: "inherit",
     shell: true,
   })
 
   child.on("close", (code) => {
     if (code === 2) {
       logger.info("🔄 Restarting bot...")
-      // Add a small delay before restarting to ensure terminal is ready
       setTimeout(() => {
         startBot()
       }, 1000)

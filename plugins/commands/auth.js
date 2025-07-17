@@ -3,15 +3,15 @@ module.exports = {
     name: "auth",
     aliases: ["login", "session"],
     version: "1.0",
-    author: "Anonymous",
+    author: "@anbuinfosec",
     countDown: 5,
-    role: 1, // Admin only
+    role: 2, // Bot admin only
     description: "Manage bot authentication and session",
     category: "Admin",
     guide: "{pn} [info|clear|restart]",
   },
 
-  onCmd: async ({ api, message, args, reply }) => {
+  onCmd: async ({ api, message, args, reply, user, role, utils, logger }) => {
     const action = args[0]?.toLowerCase()
 
     switch (action) {

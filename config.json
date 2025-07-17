@@ -1,15 +1,48 @@
 {
   "botName": "GeminiBot",
   "prefix": ".",
-  "admins": ["1234567890@s.whatsapp.net"],
+  "skipSync": true,
+  "admins": [
+    "206674480652449@lid",
+    "8801537651411@s.whatsapp.net"
+  ],
+  "dashboard": {
+    "enabled": true,
+    "port": 3000,
+    "adminPassword": "admin123",
+    "sessionTimeout": 1800000,
+    "refreshInterval": 3000,
+    "otpEnabled": true,
+    "otpExpiry": 300000,
+    "maxOtpAttempts": 3,
+    "blockDuration": 900000,
+    "adminNumbers": [
+      "8801537651411",
+      "8801603940088"
+    ]
+  },
   "database": {
     "type": "json",
     "mongodb": {
       "uri": "mongodb://localhost:27017/whatsapp_bot"
+    },
+    "mysql": {
+      "host": "localhost",
+      "user": "root",
+      "password": "password",
+      "database": "whatsapp_bot"
+    },
+    "sqlite": {
+      "path": "database.db"
     }
   },
   "logCommands": true,
   "antiInbox": false,
   "whitelist": [],
-  "blacklist": []
+  "blacklist": [],
+  "permissions": {
+    "adminOnly": false,
+    "moderatorCommands": [],
+    "bannedUsers": []
+  }
 }

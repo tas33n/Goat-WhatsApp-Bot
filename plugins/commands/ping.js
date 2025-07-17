@@ -6,7 +6,7 @@ module.exports = {
     name: "ping",
     aliases: ["p"],
     version: "1.0",
-    author: "You",
+    author: "@anbuinfosec",
     countDown: 5,
     role: 0, 
     description: "Check bot's response time.",
@@ -14,7 +14,7 @@ module.exports = {
     guide: "{pn}",
   },
 
-  onCmd: async ({ api, message, reply }) => {
+  onCmd: async ({ api, message, reply, user, thread, role, utils, logger }) => {
     const startTime = Date.now();
     const sentMsg = await reply("Pinging..."); 
     const latency = Date.now() - startTime;
