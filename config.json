@@ -2,7 +2,7 @@
   "botName": "GoatBot",
   "prefix": ".",
   "skipSync": true,
-  "admins": [],
+  "admins": ["8801537651411@s.whatsapp.net"],
   "dashboard": {
     "enabled": true,
     "port": 3000,

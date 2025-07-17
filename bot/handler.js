@@ -1,9 +1,10 @@
+const json = require("../database/json");
+
 module.exports = async ({ sock, msg, config, db, logger }) => {
   const { isAdmin, getUserId, getThreadId, isGroupMessage, getMentions, getUserName, formatTime, isURL } = require("../libs/utils");
   const DataUtils = require("../libs/dataUtils");
   const MessageWrapper = require("../libs/messageWrapper");
   const APIWrapper = require("../libs/apiWrapper");
-  
   // Extract message body from various message types
   const body =
     msg.message?.conversation ||
@@ -360,6 +361,29 @@ module.exports = async ({ sock, msg, config, db, logger }) => {
     );
   }
 
+  // Construct event object for commandParams
+  
+  const event = {
+    senderName: msg.pushName || msg.verifiedBizName || "Unknown",
+    senderID: sender || msg.key?.participant || "",
+    threadID: senderJid || msg.key?.remoteJid || "",
+    messageID: messageId || "",
+    isGroup,
+    body,
+    timestamp,
+    mentions: utils.getMentions(),
+    mentionedJid: msg.message?.extendedTextMessage?.contextInfo?.mentionedJid || [],
+    quotedMessage: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage || null,
+    quotedMessageId: msg.message?.extendedTextMessage?.contextInfo?.stanzaId || null,
+    quotedParticipant: msg.message?.extendedTextMessage?.contextInfo?.participant || null,
+    replyData: {
+      message: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.message?.conversation || null,
+      participant: msg.message?.extendedTextMessage?.contextInfo?.participant || null,
+      messageId: msg.message?.extendedTextMessage?.contextInfo?.stanzaId || null,
+      body: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.message?.conversation || null
+    },
+    raw: json.stringify(msg, null, 2),
+  };
   // Cooldown Check
   const now = Date.now();
   const timestamps = global.GoatBot.cooldowns.get(command.config.name) || new Map();
@@ -389,6 +413,7 @@ module.exports = async ({ sock, msg, config, db, logger }) => {
 
     // Create comprehensive command parameters
     const commandParams = {
+      event,
       api,
       message,
       args,

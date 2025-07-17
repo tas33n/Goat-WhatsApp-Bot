@@ -19,7 +19,7 @@ module.exports = {
     const sentMsg = await reply("Pinging..."); 
     const latency = Date.now() - startTime;
 
-    await api.sendMessage(message.key.remoteJid, {
+    await api.sendMessage(sentMsg.key.remoteJid, {
       text: `🏓 Pong!\nLatency: ${latency}ms`,
       edit: sentMsg.key,
     });
