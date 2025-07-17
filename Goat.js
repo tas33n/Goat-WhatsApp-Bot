@@ -83,7 +83,9 @@ function printBanner() {
   
   // Print subtitle
   const currentVersion = require("./package.json").version;
-  const subtitle = `GoatBot V2@${currentVersion} - A simple WhatsApp bot with advanced features`;
+  const vvv = currentVersion.charAt(0);
+
+  const subtitle = `GoatBot V${vvv}@${currentVersion} - A simple WhatsApp bot with advanced features`;
   const subTitleArray = [];
   
   let subTitle = subtitle;

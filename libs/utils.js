@@ -129,8 +129,8 @@ function getUserId(message) {
  * @param {Object} message - The message object
  * @returns {string} - The thread ID
  */
-function getThreadId(message) {
-  return message.key.remoteJid;
+function getThreadId(event) {
+  return event.threadID;
 }
 
 /**

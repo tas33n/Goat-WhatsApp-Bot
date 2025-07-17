@@ -382,7 +382,7 @@ module.exports = async ({ sock, msg, config, db, logger }) => {
       messageId: msg.message?.extendedTextMessage?.contextInfo?.stanzaId || null,
       body: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.message?.conversation || null
     },
-    raw: json.stringify(msg, null, 2),
+    raw: JSON.stringify(msg, null, 2)
   };
   // Cooldown Check
   const now = Date.now();
