@@ -106,7 +106,7 @@ async function connect({ method } = {}) {
             await startConnection(null, resolve, reject);
         }
       } else {
-        global.GoatBot.authMethod = "existing_session";
+        global.GoatBot.authMethod;
         global.GoatBot.sessionValid = true;
         global.GoatBot.waitingForAuth = false;
         await startConnection(null, resolve, reject);

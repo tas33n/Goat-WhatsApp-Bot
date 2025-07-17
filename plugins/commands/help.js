@@ -59,10 +59,10 @@ module.exports = {
     },
   },
 
-  onCmd: async function ({ api, message, args, db, logger, config, reply }) {
+  onCmd: async function ({ api, message, args, db, logger, config, reply, event }) {
     try {
-      const senderJid = message.key.participant || message.key.remoteJid;
-      const threadID = message.key.remoteJid;
+      const senderJid = event.senderID;
+      const threadID = event.threadID;
       const { isAdmin } = require("../../libs/utils");
       const role = isAdmin(senderJid, config) ? 2 : 0;
       const prefix = config.prefix;

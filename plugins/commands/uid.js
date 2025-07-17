@@ -12,20 +12,20 @@ module.exports = {
 			+ "\n{pn} reply: get user ID of replied message sender"
 	},
 
-	onStart: async function ({ message, event, args, usersData }) {
+	onStart: async function ({ message, event, args }) {
+
 		const { senderID, threadID } = event;
 		
-		if (event.messageReply) {
-			const targetID = event.messageReply.senderID;
-			const targetName = await usersData.getName(targetID);
-			return message.reply(`👤 ID of ${targetName}: ${targetID}`);
+		// Check for reply (quoted message)
+		if (event.quotedParticipant) {
+			return message.reply(`👤 ID: ${event.quotedParticipant}`);
 		}
-		
-		if (Object.keys(event.mentions).length > 0) {
+
+		// Check for mentions (array)
+		if (Array.isArray(event.mentions) && event.mentions.length > 0) {
 			let msg = "";
-			for (const id in event.mentions) {
-				const name = event.mentions[id].replace("@", "");
-				msg += `👤 ID of ${name}: ${id}\n`;
+			for (const id of event.mentions) {
+				msg += `👤 ID: ${id}\n`;
 			}
 			return message.reply(msg.trim());
 		}
@@ -34,15 +34,13 @@ module.exports = {
 			const targetID = args[0];
 			if (!isNaN(targetID)) {
 				try {
-					const targetName = await usersData.getName(targetID);
-					return message.reply(`👤 ID of ${targetName}: ${targetID}`);
+					return message.reply(`👤 ID: ${targetID}`);
 				} catch (err) {
 					return message.reply("❌ User not found");
 				}
 			}
 		}
 		
-		const userName = await usersData.getName(senderID);
-		return message.reply(`👤 ID of ${userName}: ${senderID}`);
+		return message.reply(`👤 ID: ${senderID}`);
 	}
 };

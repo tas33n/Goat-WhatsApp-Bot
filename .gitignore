@@ -1,5 +1,6 @@
 # This is a .gitignore file for a Node.js project
 # It specifies files and directories that should be ignored by Git.
+
 node_modules/*
 package-lock.json
 .DS_Store
@@ -10,6 +11,10 @@ yarn-error.log
 .idea/
 .vscode-test/
 
-# Ignore session and database files
-session/*
-database/data/*
+# Ignore everything in the session folder (all files and subfolders)
+session/**
+# Ignore everything in the database/data folder (all files and subfolders)
+database/data/**
+
+# You can add exceptions below if needed (e.g., !database/data/.keep)
+config.json
