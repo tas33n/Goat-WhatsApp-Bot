@@ -62,20 +62,26 @@ class APIWrapper {
     try {
       if (Array.isArray(attachment)) {
         // Multiple attachments
-        const attachmentStreams = [];
+        const attachmentData = [];
         
         for (const att of attachment) {
           try {
-            const stream = await getStreamFromURL(att);
-            if (stream) {
-              attachmentStreams.push(stream);
+            // Check if attachment is already a stream object or a URL
+            if (typeof att === 'string') {
+              // It's a URL, use direct URL method (preferred by Baileys)
+              attachmentData.push({ url: att });
+            } else if (att && typeof att === 'object' && att.readable !== undefined) {
+              // It's already a stream object, use stream method
+              attachmentData.push(att);
+            } else {
+              this.logger.error(`Invalid attachment type: ${typeof att}`, att);
             }
           } catch (error) {
-            this.logger.error(`Error getting stream for attachment ${att}:`, error);
+            this.logger.error(`Error processing attachment ${att}:`, error);
           }
         }
         
-        if (attachmentStreams.length > 0) {
+        if (attachmentData.length > 0) {
           // Send text first if provided
           if (text) {
             const textMessage = { text: text };
@@ -86,8 +92,8 @@ class APIWrapper {
           }
           
           // Send attachments
-          for (const stream of attachmentStreams) {
-            const attachmentMessage = { image: stream };
+          for (const attachmentObj of attachmentData) {
+            const attachmentMessage = { image: attachmentObj };
             if (options.quoted && !text) {
               attachmentMessage.quoted = options.quoted;
             }
@@ -97,7 +103,7 @@ class APIWrapper {
             await new Promise(resolve => setTimeout(resolve, 500));
           }
           
-          return { success: true, count: attachmentStreams.length };
+          return { success: true, count: attachmentData.length };
         } else {
           // Fallback to text only
           const messageContent = { text: text || "❌ Failed to process attachments" };
@@ -109,18 +115,45 @@ class APIWrapper {
       } else {
         // Single attachment
         try {
-          const stream = await getStreamFromURL(attachment);
+          let attachmentData;
           
-          if (stream) {
-            const messageContent = {
-              image: stream,
-              caption: text || undefined
-            };
-            
+          // Check if attachment is a URL, local file path, or stream
+          const fs = require('fs');
+          if (typeof attachment === 'string') {
+            if (/^https?:\/\//.test(attachment)) {
+              // It's a URL
+              attachmentData = { url: attachment };
+            } else if (fs.existsSync(attachment)) {
+              // It's a local file path
+              attachmentData = fs.createReadStream(attachment);
+            } else {
+              this.logger.error(`Invalid attachment string: ${attachment}`);
+              const messageContent = { text: text || "❌ Invalid attachment path or URL" };
+              if (options.quoted) {
+                messageContent.quoted = options.quoted;
+              }
+              return await this.sock.sendMessage(threadID, messageContent);
+            }
+          } else if (attachment && typeof attachment === 'object' && attachment.readable !== undefined) {
+            // It's already a stream object
+            attachmentData = attachment;
+          } else {
+            this.logger.error(`Invalid attachment type: ${typeof attachment}`, attachment);
+            // Fallback to text only
+            const messageContent = { text: text || "❌ Invalid attachment type" };
             if (options.quoted) {
               messageContent.quoted = options.quoted;
             }
-            
+            return await this.sock.sendMessage(threadID, messageContent);
+          }
+          if (attachmentData) {
+            const messageContent = {
+              image: attachmentData,
+              caption: text || undefined
+            };
+            if (options.quoted) {
+              messageContent.quoted = options.quoted;
+            }
             return await this.sock.sendMessage(threadID, messageContent);
           } else {
             // Fallback to text only
@@ -333,14 +366,21 @@ class APIWrapper {
    */
   async sendImage(threadID, imageUrl, caption = "", options = {}) {
     try {
-      const stream = await getStreamFromURL(imageUrl);
+      let imageData;
       
-      if (!stream) {
-        throw new Error("Failed to get image stream");
+      // Check if imageUrl is already a stream object or a URL
+      if (typeof imageUrl === 'string') {
+        // It's a URL, use direct URL method (preferred by Baileys)
+        imageData = { url: imageUrl };
+      } else if (imageUrl && typeof imageUrl === 'object' && imageUrl.readable !== undefined) {
+        // It's already a stream object, use stream method
+        imageData = imageUrl;
+      } else {
+        throw new Error("Invalid image URL or stream provided");
       }
       
       const messageContent = {
-        image: stream,
+        image: imageData,
         caption: caption || undefined
       };
       
@@ -371,14 +411,21 @@ class APIWrapper {
    */
   async sendVideo(threadID, videoUrl, caption = "", options = {}) {
     try {
-      const stream = await getStreamFromURL(videoUrl);
+      let videoData;
       
-      if (!stream) {
-        throw new Error("Failed to get video stream");
+      // Check if videoUrl is already a stream object or a URL
+      if (typeof videoUrl === 'string') {
+        // It's a URL, use direct URL method (preferred by Baileys)
+        videoData = { url: videoUrl };
+      } else if (videoUrl && typeof videoUrl === 'object' && videoUrl.readable !== undefined) {
+        // It's already a stream object, use stream method
+        videoData = videoUrl;
+      } else {
+        throw new Error("Invalid video URL or stream provided");
       }
       
       const messageContent = {
-        video: stream,
+        video: videoData,
         caption: caption || undefined
       };
       
@@ -408,14 +455,21 @@ class APIWrapper {
    */
   async sendAudio(threadID, audioUrl, options = {}) {
     try {
-      const stream = await getStreamFromURL(audioUrl);
+      let audioData;
       
-      if (!stream) {
-        throw new Error("Failed to get audio stream");
+      // Check if audioUrl is already a stream object or a URL
+      if (typeof audioUrl === 'string') {
+        // It's a URL, use direct URL method (preferred by Baileys)
+        audioData = { url: audioUrl };
+      } else if (audioUrl && typeof audioUrl === 'object' && audioUrl.readable !== undefined) {
+        // It's already a stream object, use stream method
+        audioData = audioUrl;
+      } else {
+        throw new Error("Invalid audio URL or stream provided");
       }
       
       const messageContent = {
-        audio: stream,
+        audio: audioData,
         mimetype: 'audio/mpeg'
       };
       

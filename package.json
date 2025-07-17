@@ -1,15 +1,12 @@
 {
-  "name": "whatsapp-bot",
-  "version": "1.0.0",
+  "name": "goat-whatsapp-bot",
+  "version": "1.0.2",
+  "author": "anbuinfosec",
+  "license": "MIT",
   "description": "Modular WhatsApp bot using Baileys with robust authentication flow.",
-  "main": "index.js",
+  "main": "Goat.js",
   "scripts": {
-    "start": "node index.js",
-    "start:enhanced": "node enhanced-start.js",
-    "optimize": "node utils/optimizer.js",
-    "optimize:quick": "node utils/optimizer.js --quick",
-    "clean:sessions": "node utils/optimizer.js --clean-sessions",
-    "clean:db": "node utils/optimizer.js --optimize-db"
+    "start": "node Goat.js"
   },
   "_moduleAliases": {
     "@": "."

@@ -1,87 +1,90 @@
-# 🐐 GOAT Bot
+# 🐐 GOAT WhatsApp Bot
 
-The ultimate modular WhatsApp bot, built for performance and extensibility.
+A modular, extensible WhatsApp bot for Node.js, inspired by Goat-Bot V2.
 
-## ✨ Core Features
+## ✨ Features
+- Modular plugin system (commands/events)
+- Hot-reloading for plugins
+- Robust authentication (QR & Pairing Code)
+- Web dashboard for monitoring
+- Database support (JSON & MongoDB)
+- Error handling and logging
 
-  * **Modular Architecture**: Add new commands and events by simply creating files.
-  * **Hot-Reloading**: The bot automatically reloads any plugins you change, no restart required.
-  * **Robust Authentication**: Supports both QR Code and Pairing Code login.
-  * **Web Dashboard**: A clean interface to monitor your bot's status and commands.
-  * **Optimized Code**: A clean, readable, and performant CommonJS codebase.
-  * **Database Support**: Out-of-the-box support for both JSON and MongoDB.
+## 📦 Project Structure
+```
+Goat-WhatsApp-Bot/
+├── bot/                # Core bot logic
+├── database/           # Data storage (JSON, MongoDB)
+├── libs/               # Utilities (logger, utils)
+├── plugins/            # Commands & events
+│   ├── commands/       # Command plugins
+│   └── events/         # Event plugins
+├── session/            # WhatsApp session files
+├── dashboard/          # Web dashboard
+├── config.json         # Bot config
+├── index.js            # Main entry
+├── Goat.js             # Loader
+├── README.md           # Overview
+├── DOCS.md             # Full docs
+├── INSTALL.md          # Install guide
+```
 
------
+## 🚀 Quick Start
+See [INSTALL.md](INSTALL.md) for full setup instructions.
 
-## 🔧 Getting Started
+## 📖 Documentation
+See [DOCS.md](DOCS.md) for all commands, plugin API, and advanced usage.
 
-### Prerequisites
-
-  * Node.js (v18+)
-  * Git
-
-### Installation & Execution
-
-1.  **Clone the repository**:
-
-    ```bash
-    git clone https://github.com/your-repo/goat-bot.git
-    cd goat-bot
-    ```
-
-2.  **Install dependencies**:
-
-    ```bash
-    npm install
-    ```
-
-3.  **Configure the bot**:
-    Edit `config.json` to set your bot's prefix and admin number.
-
-4.  **Run the bot**:
-
-    ```bash
-    npm start
-    ```
-
-    Follow the prompts to connect your WhatsApp account.
-
------
-
-## ✍️ Creating Plugins
-
-### New Command
-
-Create a new file in `/plugins/commands`. The bot will load it automatically.
-
-```javascript
-// plugins/commands/example.js
+## ✍️ Example: Command Plugin
+```js
+// plugins/commands/ping.js
 module.exports = {
   config: {
-    name: "example",
-    description: "An example command.",
+    name: "ping",
+    description: "Ping command",
   },
-  onCmd: async ({ reply }) => {
-    return reply("This is an example command!");
-  },
+  onCmd: async ({ reply }) => reply("Pong!")
 };
 ```
 
-### New Event
-
-Create a new file in `/plugins/events` to handle events like new users joining.
-
-```javascript
+## ✍️ Example: Event Plugin
+```js
 // plugins/events/welcome.js
 module.exports = {
-  config: {
-    name: "welcome",
-  },
+  config: { name: "welcome" },
   onEvent: async ({ api, event }) => {
     if (event.action !== "add") return;
     for (const user of event.participants) {
       api.sendMessage(event.id, { text: `Welcome, @${user.split("@")[0]}!`, mentions: [user] });
     }
-  },
+  }
 };
 ```
+
+## 🗄️ Example: Database Usage
+```js
+// database/manager.js
+const fs = require("fs");
+const dataPath = "./database/data.json";
+module.exports = {
+  get: () => JSON.parse(fs.readFileSync(dataPath)),
+  set: (data) => fs.writeFileSync(dataPath, JSON.stringify(data, null, 2)),
+};
+```
+
+## 🛠️ Customization
+- Add new commands/events in `plugins/`
+- Edit `config.json` for bot settings
+- Use MongoDB by editing `database/mongodb.js`
+
+## 🆘 Troubleshooting
+- See [INSTALL.md](INSTALL.md) for dependency setup
+- See [DOCS.md](DOCS.md) for command reference
+- Check logs in `libs/logger.js`
+
+---
+Maintainer: @anbuinfosec
+
+---
+
+## Inspired by [Goat-Bot-V2](https://github.com/ntkhang03/Goat-Bot-V2)
