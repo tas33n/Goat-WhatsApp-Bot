@@ -1,11 +1,8 @@
 {
-  "botName": "GeminiBot",
+  "botName": "GoatBot",
   "prefix": ".",
   "skipSync": true,
-  "admins": [
-    "206674480652449@lid",
-    "8801537651411@s.whatsapp.net"
-  ],
+  "admins": [],
   "dashboard": {
     "enabled": true,
     "port": 3000,
@@ -16,10 +13,7 @@
     "otpExpiry": 300000,
     "maxOtpAttempts": 3,
     "blockDuration": 900000,
-    "adminNumbers": [
-      "8801537651411",
-      "8801603940088"
-    ]
+    "adminNumbers": []
   },
   "database": {
     "type": "json",

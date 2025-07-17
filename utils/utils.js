@@ -2,11 +2,15 @@ const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 const youtubedl = require("youtube-dl-exec");
+const { logger } = require("../libs/logger");
 
 // Utility function to get extension from MIME type
 function getExtFromMimeType(mimeType = "") {
   const mimeDB = require('mime-db');
-  return mimeDB[mimeType] ? (mimeDB[mimeDB[mimeType]] || [])[0] || "unknown" : "unknown";
+  if (mimeDB[mimeType] && Array.isArray(mimeDB[mimeType].extensions)) {
+    return mimeDB[mimeType].extensions[0] || "unknown";
+  }
+  return "unknown";
 }
 
 // Utility function to generate random string
@@ -25,45 +29,42 @@ async function getStreamFromURL(url = "", pathName = "", options = {}) {
     options = pathName;
     pathName = "";
   }
-  
+
+  // If it's a local file path, return a readable stream
+  if (typeof url === "string" && !/^https?:\/\//.test(url) && fs.existsSync(url)) {
+    return fs.createReadStream(url);
+  }
+
+  // Otherwise, treat as remote URL
   try {
-    // Validate URL
     if (!url || typeof url !== "string" || url.trim() === "") {
       throw new Error(`Invalid URL provided: ${url}`);
     }
-    
-    // Check if URL is valid
     if (!isValidUrl(url)) {
       throw new Error(`Invalid URL format: ${url}`);
     }
-    
     const response = await axios({
       url: url.trim(),
       method: "GET",
       responseType: "stream",
-      timeout: 15000, // 15 second timeout
+      timeout: 15000,
       maxRedirects: 3,
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
       },
       ...options
     });
-    
     if (!pathName) {
       const contentType = response.headers["content-type"];
       const extension = getExtFromMimeType(contentType) || "jpg";
       pathName = randomString(10) + '.' + extension;
     }
-    
-    // Set the path property correctly
     if (response.data) {
       response.data.path = pathName;
     }
-    
     return response.data;
-  }
-  catch (err) {
-    console.log(`Error in getStreamFromURL for ${url}:`, err.message);
+  } catch (err) {
+    logger.error(`Error in getStreamFromURL for ${url}: ${err.message}`);
     throw err;
   }
 }
@@ -72,7 +73,7 @@ async function getStreamFromURL(url = "", pathName = "", options = {}) {
 async function downloadWithYoutubeDL(videoUrl, filepath, type = "audio") {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(`Downloading ${type} with youtube-dl-exec...`);
+      logger.info(`Downloading ${type} with youtube-dl-exec...`);
       
       // Use the provided filepath directly (should be in tmp directory)
       const downloadDir = path.dirname(filepath);
@@ -102,7 +103,7 @@ async function downloadWithYoutubeDL(videoUrl, filepath, type = "audio") {
       }
       
       await youtubedl(videoUrl, ytdlOptions);
-      console.log(`youtube-dl-exec download completed: ${filepath}`);
+      logger.info(`youtube-dl-exec download completed: ${filepath}`);
       
       // Verify file exists and has content
       if (fs.existsSync(filepath)) {
@@ -117,7 +118,7 @@ async function downloadWithYoutubeDL(videoUrl, filepath, type = "audio") {
       }
       
     } catch (error) {
-      console.log("youtube-dl-exec failed:", error.message);
+          logger.error(`youtube-dl-exec failed: ${error.message}`);
       reject(error);
     }
   });
@@ -130,7 +131,7 @@ async function sendAttachmentWithText(api, jid, attachmentPath, text, type = "im
   
   while (attempt < maxRetries) {
     try {
-      console.log(`Attempting to send ${type} (attempt ${attempt + 1}/${maxRetries}): ${attachmentPath}`);
+      logger.info(`Attempting to send ${type} (attempt ${attempt + 1}/${maxRetries}): ${attachmentPath}`);
       
       const messageContent = {
         caption: text
@@ -159,20 +160,20 @@ async function sendAttachmentWithText(api, jid, attachmentPath, text, type = "im
       }
       
       await api.sendMessage(jid, messageContent);
-      console.log(`Successfully sent ${type}`);
+      logger.info(`Successfully sent ${type}`);
       return true;
     } catch (error) {
-      console.log(`Error sending ${type} (attempt ${attempt + 1}):`, error.message);
+      logger.error(`Error sending ${type} (attempt ${attempt + 1}): ${error.message}`);
       attempt++;
       
       if (attempt < maxRetries) {
-        console.log(`Retrying in 1 second...`);
+        logger.info(`Retrying in 1 second...`);
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
   }
   
-  console.log(`Failed to send ${type} after ${maxRetries} attempts`);
+  logger.error(`Failed to send ${type} after ${maxRetries} attempts`);
   return false;
 }
 
@@ -181,7 +182,7 @@ async function sendMultipleAttachments(api, jid, attachments, type = "image", te
   try {
     // Validate inputs
     if (!api || !jid || !attachments) {
-      console.log("Invalid parameters for sendMultipleAttachments");
+      logger.error("Invalid parameters for sendMultipleAttachments");
       if (text) {
         await api.sendMessage(jid, { text: text });
       }
@@ -194,7 +195,7 @@ async function sendMultipleAttachments(api, jid, attachments, type = "image", te
       const validUrls = attachments.filter(url => url && url.trim() && isValidUrl(url));
       
       if (validUrls.length === 0) {
-        console.log("No valid URLs found in attachments");
+        logger.error("No valid URLs found in attachments");
         if (text) {
           await api.sendMessage(jid, { text: text });
         }
@@ -214,7 +215,7 @@ async function sendMultipleAttachments(api, jid, attachments, type = "image", te
         
         for (let i = 0; i < maxImages; i++) {
           try {
-            console.log(`Attempting to send image ${i + 1}/${maxImages}: ${validUrls[i]}`);
+            logger.info(`Attempting to send image ${i + 1}/${maxImages}: ${validUrls[i]}`);
             
             // First try direct URL method (most reliable for images)
             try {
@@ -224,14 +225,14 @@ async function sendMultipleAttachments(api, jid, attachments, type = "image", te
               
               await api.sendMessage(jid, messageContent);
               sentCount++;
-              console.log(`Successfully sent image ${i + 1}/${maxImages}`);
+              logger.info(`Successfully sent image ${i + 1}/${maxImages}`);
               
               // Delay between messages to avoid rate limiting
               if (i < maxImages - 1) {
                 await new Promise(resolve => setTimeout(resolve, 1000));
               }
             } catch (directError) {
-              console.log(`Direct URL method failed for image ${i + 1}, trying stream method:`, directError.message);
+              logger.error(`Direct URL method failed for image ${i + 1}, trying stream method: ${directError.message}`);
               
               // Try stream method as fallback
               try {
@@ -244,35 +245,35 @@ async function sendMultipleAttachments(api, jid, attachments, type = "image", te
                   
                   await api.sendMessage(jid, messageContent);
                   sentCount++;
-                  console.log(`Successfully sent image ${i + 1}/${maxImages} using stream method`);
+                  logger.info(`Successfully sent image ${i + 1}/${maxImages} using stream method`);
                   
                   // Delay between messages to avoid rate limiting
                   if (i < maxImages - 1) {
                     await new Promise(resolve => setTimeout(resolve, 1000));
                   }
                 } else {
-                  console.log(`Invalid stream for image ${i + 1}: ${validUrls[i]}`);
+                  logger.error(`Invalid stream for image ${i + 1}: ${validUrls[i]}`);
                 }
               } catch (streamError) {
-                console.log(`Stream method also failed for image ${i + 1}:`, streamError.message);
+                logger.error(`Stream method also failed for image ${i + 1}: ${streamError.message}`);
               }
             }
           } catch (error) {
-            console.log(`Error sending image ${i + 1}/${maxImages} (${validUrls[i]}):`, error.message);
+            logger.error(`Error sending image ${i + 1}/${maxImages} (${validUrls[i]}): ${error.message}`);
           }
         }
 
-        console.log(`Successfully sent ${sentCount} images out of ${maxImages}`);
+        logger.info(`Successfully sent ${sentCount} images out of ${maxImages}`);
         return sentCount > 0;
         
       } catch (error) {
-        console.log("Error in sendMultipleAttachments:", error.message);
+        logger.error(`Error in sendMultipleAttachments: ${error.message}`);
         // Final fallback to text only
         if (text) {
           try {
             await api.sendMessage(jid, { text: text });
           } catch (textError) {
-            console.log("Failed to send even text:", textError.message);
+            logger.error(`Failed to send even text: ${textError.message}`);
           }
         }
         return false;
@@ -296,7 +297,7 @@ async function sendMultipleAttachments(api, jid, attachments, type = "image", te
     
     return successCount > 0;
   } catch (error) {
-    console.log("Error sending multiple attachments:", error.message);
+    logger.error(`Error sending multiple attachments: ${error.message}`);
     return false;
   }
 }
@@ -378,7 +379,7 @@ function isWithinSizeLimit(filepath, limitMB = 25) {
   try {
     const stats = fs.statSync(filepath);
     const fileSizeInMB = stats.size / (1024 * 1024);
-    console.log(`File size: ${fileSizeInMB.toFixed(2)} MB (limit: ${limitMB} MB)`);
+    logger.info(`File size: ${fileSizeInMB.toFixed(2)} MB (limit: ${limitMB} MB)`);
     return fileSizeInMB <= limitMB;
   } catch (error) {
     console.log("Error checking file size:", error.message);
@@ -390,13 +391,13 @@ function isWithinSizeLimit(filepath, limitMB = 25) {
 function validateMediaFile(filepath, type = "image") {
   try {
     if (!fs.existsSync(filepath)) {
-      console.log(`File does not exist: ${filepath}`);
+      logger.error(`File does not exist: ${filepath}`);
       return false;
     }
 
     const stats = fs.statSync(filepath);
     if (stats.size === 0) {
-      console.log(`File is empty: ${filepath}`);
+      logger.error(`File is empty: ${filepath}`);
       return false;
     }
 
@@ -418,41 +419,16 @@ function validateMediaFile(filepath, type = "image") {
 
     const fileSizeInMB = stats.size / (1024 * 1024);
     if (fileSizeInMB > sizeLimit) {
-      console.log(`File too large: ${fileSizeInMB.toFixed(2)} MB (limit: ${sizeLimit} MB)`);
       return false;
     }
-
-    console.log(`File validation passed: ${filepath} (${fileSizeInMB.toFixed(2)} MB)`);
     return true;
   } catch (error) {
-    console.log("Error validating media file:", error.message);
     return false;
   }
 }
 
 // Enhanced cleanup function with better error handling
-function cleanupFile(filepath, delay = 5000) {
-  setTimeout(() => {
-    try {
-      if (fs.existsSync(filepath)) {
-        fs.unlinkSync(filepath);
-        console.log(`Cleaned up file: ${filepath}`);
-      }
-    } catch (error) {
-      console.log(`Error cleaning up file ${filepath}:`, error.message);
-    }
-  }, delay);
-}
-
-// Enhanced filename sanitization
-function sanitizeFilename(filename) {
-  return filename
-    .replace(/[<>:"/\\|?*]/g, '') // Remove invalid characters
-    .replace(/\s+/g, '_') // Replace spaces with underscores
-    .replace(/_{2,}/g, '_') // Replace multiple underscores with single
-    .replace(/^_|_$/g, '') // Remove leading/trailing underscores
-    .substring(0, 100); // Limit length
-}
+// ...existing code...
 
 module.exports = {
   getExtFromMimeType,

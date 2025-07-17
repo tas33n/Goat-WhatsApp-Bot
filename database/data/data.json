@@ -1,1 +1,1307 @@
-{}
+{
+  "global_settings": {
+    "initialized": true,
+    "version": "1.0.0",
+    "createdAt": 1752739786956,
+    "totalUsers": 0,
+    "totalThreads": 0,
+    "totalMessages": 0
+  },
+  "message_E01EE9F646FC93CD1354661B2CABCE16": {
+    "id": "E01EE9F646FC93CD1354661B2CABCE16",
+    "body": ".ytdl -v sahiba",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": {
+      "low": 1752739808,
+      "high": 0,
+      "unsigned": true
+    },
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "E01EE9F646FC93CD1354661B2CABCE16"
+      },
+      "message": {
+        "conversation": ".ytdl -v sahiba"
+      },
+      "messageTimestamp": "1752739808",
+      "messageSecret": "QmB+a0f7oxROsYYqZ3Pg4dOLCeWNPaEs5nxKM95PIfs=",
+      "reportingTokenInfo": {
+        "reportingTag": "AQggMgQSKbrcmVRsx3YluB0LTH0="
+      },
+      "isMentionedInStatus": false
+    }
+  },
+  "lastExp_8801537651411@s.whatsapp.net": 1752744960263,
+  "message_6457C79516CE6AB18E67B602B5758CFD": {
+    "id": "6457C79516CE6AB18E67B602B5758CFD",
+    "body": "1",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752739833,
+    "type": "extendedText",
+    "quoted": true,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "6457C79516CE6AB18E67B602B5758CFD"
+      },
+      "messageTimestamp": 1752739833,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "extendedTextMessage": {
+          "text": "1",
+          "previewType": "NONE",
+          "contextInfo": {
+            "stanzaId": "3EB0E06C69605B657644C9",
+            "participant": "8801603940088@s.whatsapp.net",
+            "quotedMessage": {
+              "conversation": "🎵 *Top 5 Results for \"sahiba\"*\n\n1. *Sahiba (Official Music Video) : Aditya Rikhari, Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:04\n   👁️ 10984514 views\n\n2. *Sahiba (Music Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 4:20\n   👁️ 141662479 views\n\n3. *Sahiba Lyrics - Aditya Rikhari • saahiba, aaye ghar kaahe na*\n   👤 Vibe Bird\n   ⏱️ 3:10\n   👁️ 466484 views\n\n4. *Sahiba (Slowed + Reverb) | Jasleen Royal, Stebin Ben | Radhika Madan, Vijay Deverakonda | SR Lofi*\n   👤 SR Lofi\n   ⏱️ 4:02\n   👁️ 2755900 views\n\n5. *Sahiba ( s l o w  + r e v e r b ) version | Aditya Rikhari | Tag Your SAHIBA*\n   👤 Lofi_Vibe\n   ⏱️ 3:35\n   👁️ 128510 views\n\n📝 *Reply with number (1-5) to download video*\nExample: Reply \"1\" to download video from result #1"
+            }
+          },
+          "inviteLinkGroupTypeV2": "DEFAULT",
+          "linkPreviewMetadata": {}
+        },
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "+hPSP6qqOD3EOjWRPJGfHbgExsHflRORhIesHRpf1pQ="
+        }
+      }
+    }
+  },
+  "message_B5F0EED006FA05FB86E464B54D6D6A9C": {
+    "id": "B5F0EED006FA05FB86E464B54D6D6A9C",
+    "body": ".ping",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": {
+      "low": 1752740086,
+      "high": 0,
+      "unsigned": true
+    },
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "B5F0EED006FA05FB86E464B54D6D6A9C"
+      },
+      "message": {
+        "conversation": ".ping"
+      },
+      "messageTimestamp": "1752740086",
+      "messageSecret": "/M92H5mEU118AFs4KKdKqn10nqAhOXMqpbhUUVG0UHg=",
+      "reportingTokenInfo": {
+        "reportingTag": "AQiXM3VkkdoUVdG6tHYSrnM4IXM="
+      },
+      "isMentionedInStatus": false
+    }
+  },
+  "message_63A677D68EF22929382F2F861C3B5455": {
+    "id": "63A677D68EF22929382F2F861C3B5455",
+    "body": ".ytb -v sahiba",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752740097,
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "63A677D68EF22929382F2F861C3B5455"
+      },
+      "messageTimestamp": 1752740097,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "conversation": ".ytb -v sahiba",
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "R6r7ZiXZ5Sk5B0tateZxqs72C0WGRMovn9rJlKvNBKo="
+        }
+      }
+    }
+  },
+  "message_8EB53682CFDFE2033C01C3247F1DDB7D": {
+    "id": "8EB53682CFDFE2033C01C3247F1DDB7D",
+    "body": ".ytdl -v sahiba",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752740108,
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "8EB53682CFDFE2033C01C3247F1DDB7D"
+      },
+      "messageTimestamp": 1752740108,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "conversation": ".ytdl -v sahiba",
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "elU9DwknhNRFLI92ofgXjSpFT8LSY/bmV4zmcMvipEg="
+        }
+      }
+    }
+  },
+  "message_7E3489F930E87C0E92296CB2D87A4286": {
+    "id": "7E3489F930E87C0E92296CB2D87A4286",
+    "body": "1",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752740126,
+    "type": "extendedText",
+    "quoted": true,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "7E3489F930E87C0E92296CB2D87A4286"
+      },
+      "messageTimestamp": 1752740126,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "extendedTextMessage": {
+          "text": "1",
+          "previewType": "NONE",
+          "contextInfo": {
+            "stanzaId": "3EB0ABB25B0C63B308EDD5",
+            "participant": "8801603940088@s.whatsapp.net",
+            "quotedMessage": {
+              "conversation": "🎵 *Top 5 Results for \"sahiba\"*\n\n1. *Sahiba (Official Music Video) : Aditya Rikhari, Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:04\n   👁️ 10986804 views\n\n2. *Sahiba (Music Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 4:20\n   👁️ 141664058 views\n\n3. *Sahiba Lyrics - Aditya Rikhari • saahiba, aaye ghar kaahe na*\n   👤 Vibe Bird\n   ⏱️ 3:10\n   👁️ 466708 views\n\n4. *Sahiba (Slowed + Reverb) | Jasleen Royal, Stebin Ben | Radhika Madan, Vijay Deverakonda | SR Lofi*\n   👤 SR Lofi\n   ⏱️ 4:02\n   👁️ 2755943 views\n\n5. *Sahiba ( s l o w  + r e v e r b ) version | Aditya Rikhari | Tag Your SAHIBA*\n   👤 Lofi_Vibe\n   ⏱️ 3:35\n   👁️ 128564 views\n\n📝 *Reply with number (1-5) to download video*\nExample: Reply \"1\" to download video from result #1"
+            }
+          },
+          "inviteLinkGroupTypeV2": "DEFAULT",
+          "linkPreviewMetadata": {}
+        },
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "+naKKAYNd4pDE0JBsaEVtmHvmey93sXSSqtxQrzTSUw="
+        }
+      }
+    }
+  },
+  "message_070C7873355B06625DCEEF3A9951C96B": {
+    "id": "070C7873355B06625DCEEF3A9951C96B",
+    "body": ".ytdl -v sahiba",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": {
+      "low": 1752740234,
+      "high": 0,
+      "unsigned": true
+    },
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "070C7873355B06625DCEEF3A9951C96B"
+      },
+      "message": {
+        "conversation": ".ytdl -v sahiba"
+      },
+      "messageTimestamp": "1752740234",
+      "messageSecret": "Wpq56Gn/g3NUuta2zcSMuqJeiTyQ78fF4IESJZ0RYkM=",
+      "reportingTokenInfo": {
+        "reportingTag": "AQgYyuOCoq8Gfiy4+J5R2cz1Y7o="
+      },
+      "isMentionedInStatus": false
+    }
+  },
+  "message_D6BB80B9B5092192B5FDF64E5610F45E": {
+    "id": "D6BB80B9B5092192B5FDF64E5610F45E",
+    "body": "1",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752740248,
+    "type": "extendedText",
+    "quoted": true,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "D6BB80B9B5092192B5FDF64E5610F45E"
+      },
+      "messageTimestamp": 1752740248,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "extendedTextMessage": {
+          "text": "1",
+          "previewType": "NONE",
+          "contextInfo": {
+            "stanzaId": "3EB0FB249901A0451935C8",
+            "participant": "8801603940088@s.whatsapp.net",
+            "quotedMessage": {
+              "conversation": "🎵 *Top 5 Results for \"sahiba\"*\n\n1. *Sahiba (Official Music Video) : Aditya Rikhari, Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:04\n   👁️ 10986804 views\n\n2. *Sahiba (Music Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 4:20\n   👁️ 141664058 views\n\n3. *Sahiba Lyrics - Aditya Rikhari • saahiba, aaye ghar kaahe na*\n   👤 Vibe Bird\n   ⏱️ 3:10\n   👁️ 466857 views\n\n4. *Sahiba ( s l o w  + r e v e r b ) version | Aditya Rikhari | Tag Your SAHIBA*\n   👤 Lofi_Vibe\n   ⏱️ 3:35\n   👁️ 128637 views\n\n5. *Sahiba 8K Full Video Song | Aditya Rikhari | Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:03\n   👁️ 463864 views\n\n📝 *Reply with number (1-5) to download video*\nExample: Reply \"1\" to download video from result #1"
+            }
+          },
+          "inviteLinkGroupTypeV2": "DEFAULT",
+          "linkPreviewMetadata": {}
+        },
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "D8gQySokdXWoL1VHSm5DrZJ2rl+WVthiWsOYAYBzrIc="
+        }
+      }
+    }
+  },
+  "message_E14F3919B26BDDF2FD3B632EA89758B9": {
+    "id": "E14F3919B26BDDF2FD3B632EA89758B9",
+    "body": ".ytdl -v sahiba",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": {
+      "low": 1752740373,
+      "high": 0,
+      "unsigned": true
+    },
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "E14F3919B26BDDF2FD3B632EA89758B9"
+      },
+      "message": {
+        "conversation": ".ytdl -v sahiba"
+      },
+      "messageTimestamp": "1752740373",
+      "messageSecret": "bkNtDP2U+IzQIkqZejHLLmpfLaQ3qfwOcZF5E+Ip50g=",
+      "reportingTokenInfo": {
+        "reportingTag": "AQgC5L0XdJTgJjqjYpfqVeembEI="
+      },
+      "isMentionedInStatus": false
+    }
+  },
+  "message_025D9C168100B1EA6389A61F3279EBCC": {
+    "id": "025D9C168100B1EA6389A61F3279EBCC",
+    "body": "1",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752740426,
+    "type": "extendedText",
+    "quoted": true,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "025D9C168100B1EA6389A61F3279EBCC"
+      },
+      "messageTimestamp": 1752740426,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "extendedTextMessage": {
+          "text": "1",
+          "previewType": "NONE",
+          "contextInfo": {
+            "stanzaId": "3EB0614DC828E1A8DA2BC5",
+            "participant": "8801603940088@s.whatsapp.net",
+            "quotedMessage": {
+              "conversation": "🎵 *Top 5 Results for \"sahiba\"*\n\n1. *Sahiba (Official Music Video) : Aditya Rikhari, Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:04\n   👁️ 10989980 views\n\n2. *Sahiba (Music Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 4:20\n   👁️ 141666343 views\n\n3. *Sahiba Lyrics - Aditya Rikhari • saahiba, aaye ghar kaahe na*\n   👤 Vibe Bird\n   ⏱️ 3:10\n   👁️ 466857 views\n\n4. *Sahiba ( s l o w  + r e v e r b ) version | Aditya Rikhari | Tag Your SAHIBA*\n   👤 Lofi_Vibe\n   ⏱️ 3:35\n   👁️ 128637 views\n\n5. *Sahiba 8K Full Video Song | Aditya Rikhari | Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:03\n   👁️ 463864 views\n\n📝 *Reply with number (1-5) to download video*\nExample: Reply \"1\" to download video from result #1"
+            }
+          },
+          "inviteLinkGroupTypeV2": "DEFAULT",
+          "linkPreviewMetadata": {}
+        },
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "2JB2aZG0SDXqXooqQfgeQoBxejUi8Detf5A3xembx+c="
+        }
+      }
+    }
+  },
+  "message_CDA74E2437C9B4C0F3E3F8AD761155C8": {
+    "id": "CDA74E2437C9B4C0F3E3F8AD761155C8",
+    "body": ".ytdl -v sahiba",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": {
+      "low": 1752740555,
+      "high": 0,
+      "unsigned": true
+    },
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "CDA74E2437C9B4C0F3E3F8AD761155C8"
+      },
+      "message": {
+        "conversation": ".ytdl -v sahiba"
+      },
+      "messageTimestamp": "1752740555",
+      "messageSecret": "cflNx/MLclTpMv62zYTc6Ofto2nMV6GXRfL9iR6eq4Y=",
+      "reportingTokenInfo": {
+        "reportingTag": "AQh+mpqoTSd63ih7Ol6f/iZ8lUI="
+      },
+      "isMentionedInStatus": false
+    }
+  },
+  "message_8712FDED4F35EAE7D73A925A1ACE0677": {
+    "id": "8712FDED4F35EAE7D73A925A1ACE0677",
+    "body": "1",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752740570,
+    "type": "extendedText",
+    "quoted": true,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "8712FDED4F35EAE7D73A925A1ACE0677"
+      },
+      "messageTimestamp": 1752740570,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "extendedTextMessage": {
+          "text": "1",
+          "previewType": "NONE",
+          "contextInfo": {
+            "stanzaId": "3EB0FA48FC17D94B52137B",
+            "participant": "8801603940088@s.whatsapp.net",
+            "quotedMessage": {
+              "conversation": "🎵 *Top 5 Results for \"sahiba\"*\n\n1. *Sahiba (Official Music Video) : Aditya Rikhari, Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:04\n   👁️ 10989980 views\n\n2. *Sahiba (Music Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 4:20\n   👁️ 141666343 views\n\n3. *Sahiba Lyrics - Aditya Rikhari • saahiba, aaye ghar kaahe na*\n   👤 Vibe Bird\n   ⏱️ 3:10\n   👁️ 467402 views\n\n4. *Sahiba (Slowed + Reverb) | Jasleen Royal, Stebin Ben | Radhika Madan, Vijay Deverakonda | SR Lofi*\n   👤 SR Lofi\n   ⏱️ 4:02\n   👁️ 2755999 views\n\n5. *Sahiba ( s l o w  + r e v e r b ) version | Aditya Rikhari | Tag Your SAHIBA*\n   👤 Lofi_Vibe\n   ⏱️ 3:35\n   👁️ 128749 views\n\n📝 *Reply with number (1-5) to download video*\nExample: Reply \"1\" to download video from result #1"
+            }
+          },
+          "inviteLinkGroupTypeV2": "DEFAULT",
+          "linkPreviewMetadata": {}
+        },
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "SqZLgCwvFsQjt4qv1jSiiAZgh16ZQleszCvBAmq5yZY="
+        }
+      }
+    }
+  },
+  "message_D8EADABC1C2D331B3A4CA075880E348D": {
+    "id": "D8EADABC1C2D331B3A4CA075880E348D",
+    "body": ".ytdl -v sahiba",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": {
+      "low": 1752740651,
+      "high": 0,
+      "unsigned": true
+    },
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "D8EADABC1C2D331B3A4CA075880E348D"
+      },
+      "message": {
+        "conversation": ".ytdl -v sahiba"
+      },
+      "messageTimestamp": "1752740651",
+      "messageSecret": "4GTs8S8RdkJ42lAGng2PZEgdWmZ6ZCAa88akZBYBJfo=",
+      "reportingTokenInfo": {
+        "reportingTag": "AQgNMU+UfZ7U/yY09MTjTAg5Rfw="
+      },
+      "isMentionedInStatus": false
+    }
+  },
+  "message_231D25CA865BFABEDC6FD89D02996117": {
+    "id": "231D25CA865BFABEDC6FD89D02996117",
+    "body": "1",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752740666,
+    "type": "extendedText",
+    "quoted": true,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "231D25CA865BFABEDC6FD89D02996117"
+      },
+      "messageTimestamp": 1752740666,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "extendedTextMessage": {
+          "text": "1",
+          "previewType": "NONE",
+          "contextInfo": {
+            "stanzaId": "3EB09A4A85DAC3B1D56D3D",
+            "participant": "8801603940088@s.whatsapp.net",
+            "quotedMessage": {
+              "conversation": "🎵 *Top 5 Results for \"sahiba\"*\n\n1. *Sahiba (Official Music Video) : Aditya Rikhari, Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:04\n   👁️ 10995924 views\n\n2. *Sahiba (Music Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 4:20\n   👁️ 141669547 views\n\n3. *Sahiba Lyrics - Aditya Rikhari • saahiba, aaye ghar kaahe na*\n   👤 Vibe Bird\n   ⏱️ 3:10\n   👁️ 467402 views\n\n4. *Sahiba (Slowed + Reverb) | Jasleen Royal, Stebin Ben | Radhika Madan, Vijay Deverakonda | SR Lofi*\n   👤 SR Lofi\n   ⏱️ 4:02\n   👁️ 2755999 views\n\n5. *Sahiba ( s l o w  + r e v e r b ) version | Aditya Rikhari | Tag Your SAHIBA*\n   👤 Lofi_Vibe\n   ⏱️ 3:35\n   👁️ 128749 views\n\n📝 *Reply with number (1-5) to download video*\nExample: Reply \"1\" to download video from result #1"
+            }
+          },
+          "inviteLinkGroupTypeV2": "DEFAULT",
+          "linkPreviewMetadata": {}
+        },
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "041rOFgAfN88XLpx/Uo+MYu9shKyn6NTcVCuhB7bhxk="
+        }
+      }
+    }
+  },
+  "message_53035178A67E4F787A657FD8E734DF39": {
+    "id": "53035178A67E4F787A657FD8E734DF39",
+    "body": ".ytdl -v sahiba",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752743171,
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "53035178A67E4F787A657FD8E734DF39"
+      },
+      "messageTimestamp": 1752743171,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "conversation": ".ytdl -v sahiba",
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "tPt3yB7QdZ0L4AJ+6LYxEZ/9CiELXUOQ667BUZPLDok="
+        }
+      }
+    }
+  },
+  "message_36CD445C3DD0A1BD017EF91A59E8EE9C": {
+    "id": "36CD445C3DD0A1BD017EF91A59E8EE9C",
+    "body": "1",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752743178,
+    "type": "extendedText",
+    "quoted": true,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "36CD445C3DD0A1BD017EF91A59E8EE9C"
+      },
+      "messageTimestamp": 1752743178,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "extendedTextMessage": {
+          "text": "1",
+          "previewType": "NONE",
+          "contextInfo": {
+            "stanzaId": "3EB0448AB508255593953A",
+            "participant": "8801603940088@s.whatsapp.net",
+            "quotedMessage": {
+              "conversation": "🎵 *Top 5 Results for \"sahiba\"*\n\n1. *Sahiba (Official Music Video) : Aditya Rikhari, Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:04\n   👁️ 11042475 views\n\n2. *Sahiba (Music Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 4:20\n   👁️ 141700970 views\n\n3. *Sahiba Lyrics - Aditya Rikhari • saahiba, aaye ghar kaahe na*\n   👤 Vibe Bird\n   ⏱️ 3:10\n   👁️ 472898 views\n\n4. *Sahiba (Slowed + Reverb) | Jasleen Royal, Stebin Ben | Radhika Madan, Vijay Deverakonda | SR Lofi*\n   👤 SR Lofi\n   ⏱️ 4:02\n   👁️ 2756940 views\n\n5. *Sahiba (Lyric Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 3:42\n   👁️ 2825443 views\n\n📝 *Reply with number (1-5) to download video*\nExample: Reply \"1\" to download video from result #1"
+            }
+          },
+          "inviteLinkGroupTypeV2": "DEFAULT",
+          "linkPreviewMetadata": {}
+        },
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "vwSJKcT4OTmhBsOZKvBAffgC2psEub6QYBHMRvfiLqw="
+        }
+      }
+    }
+  },
+  "message_2DC5A7EA6B59094BCD0BD1C1B5AFD9B5": {
+    "id": "2DC5A7EA6B59094BCD0BD1C1B5AFD9B5",
+    "body": ".ytdl -v sahiba",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752743428,
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "2DC5A7EA6B59094BCD0BD1C1B5AFD9B5"
+      },
+      "messageTimestamp": 1752743428,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "conversation": ".ytdl -v sahiba",
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "kUX/kz5pA6z6ciw8ajY+Fj15mSgoj/QVcibbrWKYFpg="
+        }
+      }
+    }
+  },
+  "message_05927C2D01505AA67835EAE36F25B6DD": {
+    "id": "05927C2D01505AA67835EAE36F25B6DD",
+    "body": "1",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752743434,
+    "type": "extendedText",
+    "quoted": true,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "05927C2D01505AA67835EAE36F25B6DD"
+      },
+      "messageTimestamp": 1752743434,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "extendedTextMessage": {
+          "text": "1",
+          "previewType": "NONE",
+          "contextInfo": {
+            "stanzaId": "3EB0A414CE2C625F8536EE",
+            "participant": "8801603940088@s.whatsapp.net",
+            "quotedMessage": {
+              "conversation": "🎵 *Top 5 Results for \"sahiba\"*\n\n1. *Sahiba (Official Music Video) : Aditya Rikhari, Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:04\n   👁️ 11044006 views\n\n2. *Sahiba (Music Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 4:20\n   👁️ 141701895 views\n\n3. *Sahiba Lyrics - Aditya Rikhari • saahiba, aaye ghar kaahe na*\n   👤 Vibe Bird\n   ⏱️ 3:10\n   👁️ 472899 views\n\n4. *Sahiba 8K Full Video Song | Aditya Rikhari | Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:03\n   👁️ 467329 views\n\n5. *Sahiba (Slowed + Reverb) | Jasleen Royal, Stebin Ben | Radhika Madan, Vijay Deverakonda | SR Lofi*\n   👤 SR Lofi\n   ⏱️ 4:02\n   👁️ 2756985 views\n\n📝 *Reply with number (1-5) to download video*\nExample: Reply \"1\" to download video from result #1"
+            }
+          },
+          "inviteLinkGroupTypeV2": "DEFAULT",
+          "linkPreviewMetadata": {}
+        },
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "e25P49AbBITxnrnKvKD6j3JTk62iCb0Eev88zw56oXo="
+        }
+      }
+    }
+  },
+  "message_E360BD2D33E38BB3641DA87046FD82A7": {
+    "id": "E360BD2D33E38BB3641DA87046FD82A7",
+    "body": ".ytdl -v sahiba",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752743619,
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "E360BD2D33E38BB3641DA87046FD82A7"
+      },
+      "messageTimestamp": 1752743619,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "conversation": ".ytdl -v sahiba",
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "J2/OOpp1j6YaVVxj6QQx0BHvRtL7gphX2/Gj5t+NTAg="
+        }
+      }
+    }
+  },
+  "message_7FAE3B38F7B048FB3C87D8DC4CB4FF2B": {
+    "id": "7FAE3B38F7B048FB3C87D8DC4CB4FF2B",
+    "body": "1",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752743624,
+    "type": "extendedText",
+    "quoted": true,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "7FAE3B38F7B048FB3C87D8DC4CB4FF2B"
+      },
+      "messageTimestamp": 1752743624,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "extendedTextMessage": {
+          "text": "1",
+          "previewType": "NONE",
+          "contextInfo": {
+            "stanzaId": "3EB097E739957EE4917468",
+            "participant": "8801603940088@s.whatsapp.net",
+            "quotedMessage": {
+              "conversation": "🎵 *Top 5 Results for \"sahiba\"*\n\n1. *Sahiba (Official Music Video) : Aditya Rikhari, Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:04\n   👁️ 11045137 views\n\n2. *Sahiba (Music Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 4:20\n   👁️ 141703551 views\n\n3. *Sahiba Lyrics - Aditya Rikhari • saahiba, aaye ghar kaahe na*\n   👤 Vibe Bird\n   ⏱️ 3:10\n   👁️ 473088 views\n\n4. *Sahiba (Slowed + Reverb) | Jasleen Royal, Stebin Ben | Radhika Madan, Vijay Deverakonda | SR Lofi*\n   👤 SR Lofi\n   ⏱️ 4:02\n   👁️ 2756985 views\n\n5. *Sahiba ( s l o w  + r e v e r b ) version | Aditya Rikhari | Tag Your SAHIBA*\n   👤 Lofi_Vibe\n   ⏱️ 3:35\n   👁️ 130449 views\n\n📝 *Reply with number (1-5) to download video*\nExample: Reply \"1\" to download video from result #1"
+            }
+          },
+          "inviteLinkGroupTypeV2": "DEFAULT",
+          "linkPreviewMetadata": {}
+        },
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "+gHx0MZIR8BEP7Ov1DcmICR2Gl9SnGYw3CfPLrJKAAo="
+        }
+      }
+    }
+  },
+  "message_59B1DD4C757C11952D4990788EC6CC0B": {
+    "id": "59B1DD4C757C11952D4990788EC6CC0B",
+    "body": ".ytdl -a sahiba",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752743780,
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "59B1DD4C757C11952D4990788EC6CC0B"
+      },
+      "messageTimestamp": 1752743780,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "conversation": ".ytdl -a sahiba",
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "G3UCLQSR7BQuCbu+98Js+t9MDBeNLvVws/sJaV8XJ8c="
+        }
+      }
+    }
+  },
+  "message_154C5B727935FCB91B49F1881DC4CD8D": {
+    "id": "154C5B727935FCB91B49F1881DC4CD8D",
+    "body": "1",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752743785,
+    "type": "extendedText",
+    "quoted": true,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "154C5B727935FCB91B49F1881DC4CD8D"
+      },
+      "messageTimestamp": 1752743785,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "extendedTextMessage": {
+          "text": "1",
+          "previewType": "NONE",
+          "contextInfo": {
+            "stanzaId": "3EB0782150C52D6597A73E",
+            "participant": "8801603940088@s.whatsapp.net",
+            "quotedMessage": {
+              "conversation": "🎵 *Top 5 Results for \"sahiba\"*\n\n1. *Sahiba (Official Music Video) : Aditya Rikhari, Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:04\n   👁️ 11046994 views\n\n2. *Sahiba (Music Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 4:20\n   👁️ 141703551 views\n\n3. *Sahiba Lyrics - Aditya Rikhari • saahiba, aaye ghar kaahe na*\n   👤 Vibe Bird\n   ⏱️ 3:10\n   👁️ 473482 views\n\n4. *Sahiba ( s l o w  + r e v e r b ) version | Aditya Rikhari | Tag Your SAHIBA*\n   👤 Lofi_Vibe\n   ⏱️ 3:35\n   👁️ 130542 views\n\n5. *Jasleen Royal & Stebin Ben - Sahiba (Lyrics) | Vijay Deverakonda | Radhika Madan*\n   👤 THE LYRICIST\n   ⏱️ 3:37\n   👁️ 1596665 views\n\n📝 *Reply with number (1-5) to download audio*\nExample: Reply \"1\" to download audio from result #1"
+            }
+          },
+          "inviteLinkGroupTypeV2": "DEFAULT",
+          "linkPreviewMetadata": {}
+        },
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "Cfjs9MUV+BlEgw1nMvsRxF6438bXpoLqPuG4MS1zqxI="
+        }
+      }
+    }
+  },
+  "message_AB4DD72F42DCA80A17E68237A4CBFA46": {
+    "id": "AB4DD72F42DCA80A17E68237A4CBFA46",
+    "body": "2",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752743796,
+    "type": "extendedText",
+    "quoted": true,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "AB4DD72F42DCA80A17E68237A4CBFA46"
+      },
+      "messageTimestamp": 1752743796,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "extendedTextMessage": {
+          "text": "2",
+          "previewType": "NONE",
+          "contextInfo": {
+            "stanzaId": "3EB0782150C52D6597A73E",
+            "participant": "8801603940088@s.whatsapp.net",
+            "quotedMessage": {
+              "conversation": "🎵 *Top 5 Results for \"sahiba\"*\n\n1. *Sahiba (Official Music Video) : Aditya Rikhari, Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:04\n   👁️ 11046994 views\n\n2. *Sahiba (Music Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 4:20\n   👁️ 141703551 views\n\n3. *Sahiba Lyrics - Aditya Rikhari • saahiba, aaye ghar kaahe na*\n   👤 Vibe Bird\n   ⏱️ 3:10\n   👁️ 473482 views\n\n4. *Sahiba ( s l o w  + r e v e r b ) version | Aditya Rikhari | Tag Your SAHIBA*\n   👤 Lofi_Vibe\n   ⏱️ 3:35\n   👁️ 130542 views\n\n5. *Jasleen Royal & Stebin Ben - Sahiba (Lyrics) | Vijay Deverakonda | Radhika Madan*\n   👤 THE LYRICIST\n   ⏱️ 3:37\n   👁️ 1596665 views\n\n📝 *Reply with number (1-5) to download audio*\nExample: Reply \"1\" to download audio from result #1"
+            }
+          },
+          "inviteLinkGroupTypeV2": "DEFAULT",
+          "linkPreviewMetadata": {}
+        },
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "OrZUo5OkTOjB/Fer/lqQ3enwy/Evdwt/oBr9WMv7bWI="
+        }
+      }
+    }
+  },
+  "message_58225C7CA375B8C2D398AD7D2927EB6E": {
+    "id": "58225C7CA375B8C2D398AD7D2927EB6E",
+    "body": ".ytdl -v sahiba",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752743824,
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "58225C7CA375B8C2D398AD7D2927EB6E"
+      },
+      "messageTimestamp": 1752743824,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "conversation": ".ytdl -v sahiba",
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "p55UY64yKLJaYH+w/OXdUBg4U8vQvgC+CC3GKDBNxek="
+        }
+      }
+    }
+  },
+  "message_161E76477A47FCBBC48A03EC038B951B": {
+    "id": "161E76477A47FCBBC48A03EC038B951B",
+    "body": "1",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752743831,
+    "type": "extendedText",
+    "quoted": true,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "161E76477A47FCBBC48A03EC038B951B"
+      },
+      "messageTimestamp": 1752743831,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "extendedTextMessage": {
+          "text": "1",
+          "previewType": "NONE",
+          "contextInfo": {
+            "stanzaId": "3EB0C035A5F2CE34B0E940",
+            "participant": "8801603940088@s.whatsapp.net",
+            "quotedMessage": {
+              "conversation": "🎵 *Top 5 Results for \"sahiba\"*\n\n1. *Sahiba (Official Music Video) : Aditya Rikhari, Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:04\n   👁️ 11046994 views\n\n2. *Sahiba (Music Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 4:20\n   👁️ 141703551 views\n\n3. *Sahiba Lyrics - Aditya Rikhari • saahiba, aaye ghar kaahe na*\n   👤 Vibe Bird\n   ⏱️ 3:10\n   👁️ 473482 views\n\n4. *Sahiba ( s l o w  + r e v e r b ) version | Aditya Rikhari | Tag Your SAHIBA*\n   👤 Lofi_Vibe\n   ⏱️ 3:35\n   👁️ 130542 views\n\n5. *Sahiba 8K Full Video Song | Aditya Rikhari | Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:03\n   👁️ 467466 views\n\n📝 *Reply with number (1-5) to download video*\nExample: Reply \"1\" to download video from result #1"
+            }
+          },
+          "inviteLinkGroupTypeV2": "DEFAULT",
+          "linkPreviewMetadata": {}
+        },
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "lpMfkRbIji8/z6I4eYu3niZ1GzVZJ1Fm7ek9NmUYdbs="
+        }
+      }
+    }
+  },
+  "message_C5A0523A9DF22BCADECBE96FBC34AEC0": {
+    "id": "C5A0523A9DF22BCADECBE96FBC34AEC0",
+    "body": ".ytdl -v sahiba",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752744471,
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "C5A0523A9DF22BCADECBE96FBC34AEC0"
+      },
+      "messageTimestamp": 1752744471,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "conversation": ".ytdl -v sahiba",
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "CjSZlGUAyOJ4hfr9bLImML+vWbNO1dBErSdgbhHUL7o="
+        }
+      }
+    }
+  },
+  "message_348802D52492DD69DB15E08E6068A67D": {
+    "id": "348802D52492DD69DB15E08E6068A67D",
+    "body": "1",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752744476,
+    "type": "extendedText",
+    "quoted": true,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "348802D52492DD69DB15E08E6068A67D"
+      },
+      "messageTimestamp": 1752744476,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "extendedTextMessage": {
+          "text": "1",
+          "previewType": "NONE",
+          "contextInfo": {
+            "stanzaId": "3EB08B13247FB7DD77E00A",
+            "participant": "8801603940088@s.whatsapp.net",
+            "quotedMessage": {
+              "conversation": "🎵 *Top 5 Results for \"sahiba\"*\n\n1. *Sahiba (Music Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 4:20\n   👁️ 141708271 views\n   🔗 https://youtube.com/watch?v=NW6Dgax2d6I\n\n2. *Sahiba (Official Music Video) : Aditya Rikhari, Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:04\n   👁️ 11054509 views\n   🔗 https://youtube.com/watch?v=n2dVFdqMYGA\n\n3. *Sahiba Lyrics - Aditya Rikhari • saahiba, aaye ghar kaahe na*\n   👤 Vibe Bird\n   ⏱️ 3:10\n   👁️ 474300 views\n   🔗 https://youtube.com/watch?v=ZhhBlQC_5N8\n\n4. *Sahiba (Slowed + Reverb) | Jasleen Royal, Stebin Ben | Radhika Madan, Vijay Deverakonda | SR Lofi*\n   👤 SR Lofi\n   ⏱️ 4:02\n   👁️ 2757165 views\n   🔗 https://youtube.com/watch?v=ZIGTgo8m6Qk\n\n5. *Sahiba 8K Full Video Song | Aditya Rikhari | Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:03\n   👁️ 468147 views\n   🔗 https://youtube.com/watch?v=cDuuYdJYIGY\n\n📝 *Reply with number (1-5) to download video*\nExample: Reply \"1\" to download video from result #1"
+            }
+          },
+          "inviteLinkGroupTypeV2": "DEFAULT",
+          "linkPreviewMetadata": {}
+        },
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "om6Ms7zbLgrQnC7HlJa2emiry7lGoi+avJRI6a3g4Ro="
+        }
+      }
+    }
+  },
+  "message_AA2004253A630DCBA9021B13C8FBCD0F": {
+    "id": "AA2004253A630DCBA9021B13C8FBCD0F",
+    "body": "1",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752744502,
+    "type": "extendedText",
+    "quoted": true,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "AA2004253A630DCBA9021B13C8FBCD0F"
+      },
+      "messageTimestamp": 1752744502,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "extendedTextMessage": {
+          "text": "1",
+          "previewType": "NONE",
+          "contextInfo": {
+            "stanzaId": "3EB08B13247FB7DD77E00A",
+            "participant": "8801603940088@s.whatsapp.net",
+            "quotedMessage": {
+              "conversation": "🎵 *Top 5 Results for \"sahiba\"*\n\n1. *Sahiba (Music Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 4:20\n   👁️ 141708271 views\n   🔗 https://youtube.com/watch?v=NW6Dgax2d6I\n\n2. *Sahiba (Official Music Video) : Aditya Rikhari, Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:04\n   👁️ 11054509 views\n   🔗 https://youtube.com/watch?v=n2dVFdqMYGA\n\n3. *Sahiba Lyrics - Aditya Rikhari • saahiba, aaye ghar kaahe na*\n   👤 Vibe Bird\n   ⏱️ 3:10\n   👁️ 474300 views\n   🔗 https://youtube.com/watch?v=ZhhBlQC_5N8\n\n4. *Sahiba (Slowed + Reverb) | Jasleen Royal, Stebin Ben | Radhika Madan, Vijay Deverakonda | SR Lofi*\n   👤 SR Lofi\n   ⏱️ 4:02\n   👁️ 2757165 views\n   🔗 https://youtube.com/watch?v=ZIGTgo8m6Qk\n\n5. *Sahiba 8K Full Video Song | Aditya Rikhari | Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:03\n   👁️ 468147 views\n   🔗 https://youtube.com/watch?v=cDuuYdJYIGY\n\n📝 *Reply with number (1-5) to download video*\nExample: Reply \"1\" to download video from result #1"
+            }
+          },
+          "inviteLinkGroupTypeV2": "DEFAULT",
+          "linkPreviewMetadata": {}
+        },
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "CfBFRs40yPl+RwjkSrYk7ne27wgiiF8+A9aweRPYKg8="
+        }
+      }
+    }
+  },
+  "message_307FC03715D6238C736DF8261678C20F": {
+    "id": "307FC03715D6238C736DF8261678C20F",
+    "body": ".cmd unload ytdl",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752744549,
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "307FC03715D6238C736DF8261678C20F"
+      },
+      "messageTimestamp": 1752744549,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "conversation": ".cmd unload ytdl",
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "u2G///3wsmYQrY47GfkthqeEkuHoElk24uoBvSNFz0w="
+        }
+      }
+    }
+  },
+  "message_17F1808AC0B2361417E56D2E1B078119": {
+    "id": "17F1808AC0B2361417E56D2E1B078119",
+    "body": ".ytdl -v sahiba",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752744562,
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "17F1808AC0B2361417E56D2E1B078119"
+      },
+      "messageTimestamp": 1752744562,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "conversation": ".ytdl -v sahiba",
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "E2r/Hcm1M1pByK96hT5WcjBgsS3JvvUj1dho2aMA9bI="
+        }
+      }
+    }
+  },
+  "message_369855BB6FDD5CA9277E502C33D2537C": {
+    "id": "369855BB6FDD5CA9277E502C33D2537C",
+    "body": "1",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752744567,
+    "type": "extendedText",
+    "quoted": true,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "369855BB6FDD5CA9277E502C33D2537C"
+      },
+      "messageTimestamp": 1752744567,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "extendedTextMessage": {
+          "text": "1",
+          "previewType": "NONE",
+          "contextInfo": {
+            "stanzaId": "3EB075BC02B385D1E2E16C",
+            "participant": "8801603940088@s.whatsapp.net",
+            "quotedMessage": {
+              "conversation": "🎵 *Top 5 Results for \"sahiba\"*\n\n1. *Sahiba (Music Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 4:20\n   👁️ 141710555 views\n   🔗 https://youtube.com/watch?v=NW6Dgax2d6I\n\n2. *Sahiba (Official Music Video) : Aditya Rikhari, Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:04\n   👁️ 11057738 views\n   🔗 https://youtube.com/watch?v=n2dVFdqMYGA\n\n3. *Sahiba Lyrics - Aditya Rikhari • saahiba, aaye ghar kaahe na*\n   👤 Vibe Bird\n   ⏱️ 3:10\n   👁️ 474300 views\n   🔗 https://youtube.com/watch?v=ZhhBlQC_5N8\n\n4. *Sahiba (Slowed + Reverb) | Jasleen Royal, Stebin Ben | Radhika Madan, Vijay Deverakonda | SR Lofi*\n   👤 SR Lofi\n   ⏱️ 4:02\n   👁️ 2757165 views\n   🔗 https://youtube.com/watch?v=ZIGTgo8m6Qk\n\n5. *Sahiba 8K Full Video Song | Aditya Rikhari | Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:03\n   👁️ 468147 views\n   🔗 https://youtube.com/watch?v=cDuuYdJYIGY\n\n📝 *Reply with number (1-5) to download video*\nExample: Reply \"1\" to download video from result #1"
+            }
+          },
+          "inviteLinkGroupTypeV2": "DEFAULT",
+          "linkPreviewMetadata": {}
+        },
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "KTMZt3dQg1Eh7iA/GGV7mIHlCc78dRvazWU5rlquKS0="
+        }
+      }
+    }
+  },
+  "message_DB9188D9ADEB5D7AD2CD02469A18319A": {
+    "id": "DB9188D9ADEB5D7AD2CD02469A18319A",
+    "body": ".ytdl -v sahiba",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752744959,
+    "type": "text",
+    "quoted": false,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "DB9188D9ADEB5D7AD2CD02469A18319A"
+      },
+      "messageTimestamp": 1752744959,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "conversation": ".ytdl -v sahiba",
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "xKeFGZtTjw6Ekm7WlLlchaO8/DadpvgQ5AaZKkr1ytE="
+        }
+      }
+    }
+  },
+  "message_086589440D8B6ACAD6C7ECAEA11E2595": {
+    "id": "086589440D8B6ACAD6C7ECAEA11E2595",
+    "body": "1",
+    "sender": "8801537651411@s.whatsapp.net",
+    "threadId": "8801537651411@s.whatsapp.net",
+    "timestamp": 1752744967,
+    "type": "extendedText",
+    "quoted": true,
+    "mentions": [],
+    "isGroup": false,
+    "raw": {
+      "key": {
+        "remoteJid": "8801537651411@s.whatsapp.net",
+        "fromMe": false,
+        "id": "086589440D8B6ACAD6C7ECAEA11E2595"
+      },
+      "messageTimestamp": 1752744967,
+      "pushName": "Mohammad Alamin",
+      "broadcast": false,
+      "message": {
+        "extendedTextMessage": {
+          "text": "1",
+          "previewType": "NONE",
+          "contextInfo": {
+            "stanzaId": "3EB0CB71C4EC984438B32A",
+            "participant": "8801603940088@s.whatsapp.net",
+            "quotedMessage": {
+              "conversation": "🎵 *Top 5 Results for \"sahiba\"*\n\n1. *Sahiba (Official Music Video) : Aditya Rikhari, Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:04\n   👁️ 11061278 views\n   🔗 https://youtube.com/watch?v=n2dVFdqMYGA\n\n2. *Sahiba (Music Video) Jasleen Royal |Vijay Deverakonda Radhikka Madan|Stebin| Priya|Aditya| Sudhanshu*\n   👤 Jasleen Royal\n   ⏱️ 4:20\n   👁️ 141712501 views\n   🔗 https://youtube.com/watch?v=NW6Dgax2d6I\n\n3. *Sahiba Lyrics - Aditya Rikhari • saahiba, aaye ghar kaahe na*\n   👤 Vibe Bird\n   ⏱️ 3:10\n   👁️ 474704 views\n   🔗 https://youtube.com/watch?v=ZhhBlQC_5N8\n\n4. *Sahiba 8K Full Video Song | Aditya Rikhari | Ankita Chhetri | T-Series*\n   👤 T-Series\n   ⏱️ 3:03\n   👁️ 468347 views\n   🔗 https://youtube.com/watch?v=cDuuYdJYIGY\n\n5. *Sahiba (Slowed + Reverb) | Jasleen Royal, Stebin Ben | Radhika Madan, Vijay Deverakonda | SR Lofi*\n   👤 SR Lofi\n   ⏱️ 4:02\n   👁️ 2757262 views\n   🔗 https://youtube.com/watch?v=ZIGTgo8m6Qk\n\n📝 *Reply with number (1-5) to download video*\nExample: Reply \"1\" to download video from result #1"
+            }
+          },
+          "inviteLinkGroupTypeV2": "DEFAULT",
+          "linkPreviewMetadata": {}
+        },
+        "messageContextInfo": {
+          "deviceListMetadata": {
+            "senderKeyHash": "9kLRgj7fyj07Cw==",
+            "senderTimestamp": "1752669579",
+            "recipientKeyHash": "wnFZWgX7GSU/SQ==",
+            "recipientTimestamp": "1752739776"
+          },
+          "deviceListMetadataVersion": 2,
+          "messageSecret": "2UnF97ZpCsi4llEKiMTUC2FUbIwyA0v5k/UT/kSwYvM="
+        }
+      }
+    }
+  }
+}

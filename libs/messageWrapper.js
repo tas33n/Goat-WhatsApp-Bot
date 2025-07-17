@@ -110,109 +110,141 @@ class MessageWrapper {
    */
   async sendWithAttachment(text, attachment, options = {}) {
     try {
+      // Helper to detect type
+      const detectType = (att) => {
+        if (typeof att === 'string') {
+          const ext = att.split('.').pop().toLowerCase();
+          if (/^https?:\/\//.test(att)) {
+            if (ext.match(/(jpg|jpeg|png|gif|webp)$/)) return 'image';
+            if (ext.match(/(mp4|mkv|mov|webm)$/)) return 'video';
+            if (ext.match(/(mp3|m4a|ogg|wav)$/)) return 'audio';
+            if (ext.match(/(pdf|doc|docx|xls|xlsx|ppt|pptx)$/)) return 'document';
+          } else {
+            if (ext.match(/(jpg|jpeg|png|gif|webp)$/)) return 'image';
+            if (ext.match(/(mp4|mkv|mov|webm)$/)) return 'video';
+            if (ext.match(/(mp3|m4a|ogg|wav)$/)) return 'audio';
+            if (ext.match(/(pdf|doc|docx|xls|xlsx|ppt|pptx)$/)) return 'document';
+          }
+        }
+        // If it's a stream, fallback to image unless specified
+        return 'image';
+      };
+
       if (Array.isArray(attachment)) {
         // Multiple attachments
-        const attachmentStreams = [];
-        
+        const attachmentData = [];
         for (const att of attachment) {
           try {
-            // Check if attachment is already a stream object or a URL
+            let type = detectType(att);
+            let obj;
             if (typeof att === 'string') {
-              // It's a URL, convert to stream
-              const stream = await getStreamFromURL(att);
-              if (stream) {
-                attachmentStreams.push(stream);
+              if (/^https?:\/\//.test(att)) {
+                obj = { url: att };
+              } else {
+                const fs = require('fs');
+                obj = fs.existsSync(att) ? fs.createReadStream(att) : { url: att };
               }
             } else if (att && typeof att === 'object' && att.readable !== undefined) {
-              // It's already a stream object
-              attachmentStreams.push(att);
+              obj = att;
             } else {
               this.logger.error(`Invalid attachment type: ${typeof att}`, att);
+              continue;
             }
+            attachmentData.push({ type, obj });
           } catch (error) {
             this.logger.error(`Error processing attachment ${att}:`, error);
           }
         }
-        
-        if (attachmentStreams.length > 0) {
-          // Send text first if provided
+        if (attachmentData.length > 0) {
           if (text) {
             const textMessage = { text: text };
-            if (options.quoted) {
-              textMessage.quoted = options.quoted;
-            }
+            if (options.quoted) textMessage.quoted = options.quoted;
             await this.sock.sendMessage(this.threadID, textMessage);
           }
-          
-          // Send attachments
-          for (const stream of attachmentStreams) {
-            const attachmentMessage = { image: stream };
-            if (options.quoted && !text) {
-              attachmentMessage.quoted = options.quoted;
-            }
+          for (const { type, obj } of attachmentData) {
+            const attachmentMessage = {};
+            attachmentMessage[type] = obj;
+            if (options.quoted && !text) attachmentMessage.quoted = options.quoted;
             await this.sock.sendMessage(this.threadID, attachmentMessage);
-            
-            // Small delay between attachments
             await new Promise(resolve => setTimeout(resolve, 500));
           }
-          
-          return { success: true, count: attachmentStreams.length };
+          return { success: true, count: attachmentData.length };
         } else {
-          // Fallback to text only
           const messageContent = { text: text || "❌ Failed to process attachments" };
-          if (options.quoted) {
-            messageContent.quoted = options.quoted;
-          }
+          if (options.quoted) messageContent.quoted = options.quoted;
           return await this.sock.sendMessage(this.threadID, messageContent);
         }
       } else {
         // Single attachment
         try {
-          let attachmentStream;
-          
-          // Check if attachment is already a stream object or a URL
+          let type = detectType(attachment);
+          let obj;
           if (typeof attachment === 'string') {
-            // It's a URL, convert to stream
-            attachmentStream = await getStreamFromURL(attachment);
+            if (/^https?:\/\//.test(attachment)) {
+              obj = { url: attachment };
+            } else {
+              const fs = require('fs');
+              if (fs.existsSync(attachment)) {
+                try {
+                  obj = fs.createReadStream(attachment);
+                  // Extra validation for readable stream
+                  if (!obj || typeof obj.pipe !== 'function' || typeof obj.read !== 'function') {
+                    this.logger.error(`Attachment stream is not a valid readable stream for file: ${attachment}`);
+                    const messageContent = { text: text || `❌ Invalid stream for file: ${attachment}` };
+                    if (options.quoted) messageContent.quoted = options.quoted;
+                    return await this.sock.sendMessage(this.threadID, messageContent);
+                  }
+                } catch (streamErr) {
+                  this.logger.error(`Failed to create stream for file: ${attachment}`, streamErr);
+                  const messageContent = { text: text || `❌ Failed to read file: ${attachment}` };
+                  if (options.quoted) messageContent.quoted = options.quoted;
+                  return await this.sock.sendMessage(this.threadID, messageContent);
+                }
+              } else {
+                this.logger.error(`File does not exist: ${attachment}`);
+                const messageContent = { text: text || `❌ File not found: ${attachment}` };
+                if (options.quoted) messageContent.quoted = options.quoted;
+                return await this.sock.sendMessage(this.threadID, messageContent);
+              }
+            }
           } else if (attachment && typeof attachment === 'object' && attachment.readable !== undefined) {
-            // It's already a stream object
-            attachmentStream = attachment;
+            // Validate readable stream object
+            if (typeof attachment.pipe !== 'function' || typeof attachment.read !== 'function') {
+              this.logger.error(`Provided stream object is not a valid readable stream`, attachment);
+              const messageContent = { text: text || "❌ Invalid stream object for attachment" };
+              if (options.quoted) messageContent.quoted = options.quoted;
+              return await this.sock.sendMessage(this.threadID, messageContent);
+            }
+            obj = attachment;
           } else {
             this.logger.error(`Invalid attachment type: ${typeof attachment}`, attachment);
-            // Fallback to text only
             const messageContent = { text: text || "❌ Invalid attachment type" };
-            if (options.quoted) {
-              messageContent.quoted = options.quoted;
-            }
+            if (options.quoted) messageContent.quoted = options.quoted;
             return await this.sock.sendMessage(this.threadID, messageContent);
           }
-          
-          if (attachmentStream) {
-            const messageContent = {
-              image: attachmentStream,
-              caption: text || undefined
-            };
-            
-            if (options.quoted) {
-              messageContent.quoted = options.quoted;
-            }
-            
-            return await this.sock.sendMessage(this.threadID, messageContent);
-          } else {
-            // Fallback to text only
-            const messageContent = { text: text || "❌ Failed to process attachment" };
-            if (options.quoted) {
-              messageContent.quoted = options.quoted;
-            }
+          // Ensure obj is defined and valid
+          if (!obj) {
+            this.logger.error(`Attachment object is undefined or null for ${type}: ${attachment}`);
+            const messageContent = { text: text || `❌ Failed to process attachment (undefined object)` };
+            if (options.quoted) messageContent.quoted = options.quoted;
             return await this.sock.sendMessage(this.threadID, messageContent);
           }
+          // For audio/video, ensure stream is valid
+          if ((type === 'audio' || type === 'video') && (typeof obj.pipe !== 'function' || typeof obj.read !== 'function')) {
+            this.logger.error(`Attachment stream is not a valid readable stream for ${type}: ${attachment}`);
+            const messageContent = { text: text || `❌ Invalid stream for ${type}: ${attachment}` };
+            if (options.quoted) messageContent.quoted = options.quoted;
+            return await this.sock.sendMessage(this.threadID, messageContent);
+          }
+          const messageContent = {};
+          messageContent[type] = obj;
+          if (type === 'image' || type === 'video') messageContent.caption = text || undefined;
+          if (options.quoted) messageContent.quoted = options.quoted;
+          return await this.sock.sendMessage(this.threadID, messageContent);
         } catch (error) {
           this.logger.error("Error sending single attachment:", error);
-          // Fallback to text only
           const messageContent = { text: text || "❌ Failed to process attachment" };
-          if (options.quoted) {
-            messageContent.quoted = options.quoted;
-          }
+          if (options.quoted) messageContent.quoted = options.quoted;
           return await this.sock.sendMessage(this.threadID, messageContent);
         }
       }
