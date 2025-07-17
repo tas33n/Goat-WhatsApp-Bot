@@ -20,6 +20,22 @@ const customFormat = winston.format.combine(
   })
 );
 
+// Custom transport to add logs to global array
+class GoatBotTransport extends winston.Transport {
+  log(info, callback) {
+    if (global.GoatBot && global.GoatBot.logs) {
+      const logEntry = `[${info.timestamp}] ${info.level}: ${info.message}`;
+      global.GoatBot.logs.push(logEntry);
+      
+      // Keep only last 500 log entries
+      if (global.GoatBot.logs.length > 500) {
+        global.GoatBot.logs = global.GoatBot.logs.slice(-500);
+      }
+    }
+    callback();
+  }
+}
+
 // Create the logger instance.
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
@@ -27,6 +43,7 @@ const logger = winston.createLogger({
     new winston.transports.Console({
       format: customFormat,
     }),
+    new GoatBotTransport()
   ],
 });
 

@@ -3,7 +3,7 @@ module.exports = {
     name: "status",
     aliases: ["stats", "info"],
     version: "1.0",
-    author: "Anonymous",
+    author: "@anbuinfosec",
     countDown: 3,
     role: 0,
     description: "Show bot status and statistics",
@@ -11,7 +11,7 @@ module.exports = {
     guide: "{pn}",
   },
 
-  onCmd: async ({ reply }) => {
+  onCmd: async ({ reply, user, thread, role, utils, logger }) => {
     const uptime = Date.now() - global.GoatBot.startTime
     const hours = Math.floor(uptime / (1000 * 60 * 60))
     const minutes = Math.floor((uptime % (1000 * 60 * 60)) / (1000 * 60))
@@ -25,10 +25,7 @@ module.exports = {
 ⚡ *Commands Executed:* ${global.GoatBot.stats.commandsExecuted}
 ❌ *Errors:* ${global.GoatBot.stats.errors}
 📦 *Commands Loaded:* ${global.GoatBot.commands.size}
-🎭 *Events Loaded:* ${global.GoatBot.events.size}
-
-🌐 *Dashboard:* http://localhost:3000
-👤 *Made by:* Anonymous`
+🎭 *Events Loaded:* ${global.GoatBot.events.size}`
 
     await reply(status)
   },
