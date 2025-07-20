@@ -83,7 +83,7 @@ async function connect({ method } = {}) {
         global.GoatBot.waitingForAuth = true;
 
         // Use provided method or show auth menu
-        const authMethod = method || (await authManager.showAuthMenu());
+        const authMethod = method || (await authManager.showAuthMenu()) || "session";
 
         // Process user selection
         switch (authMethod) {
