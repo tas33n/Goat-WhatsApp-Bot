@@ -25,6 +25,7 @@
     "fs-extra": "^11.1.1",
     "gradient-string": "^2.0.2",
     "inquirer": "^8.2.6",
+    "js-confuser": "^2.0.0",
     "module-alias": "^2.2.3",
     "moment-timezone": "^0.6.0",
     "mongodb": "^6.5.0",
@@ -38,7 +39,6 @@
     "yt-search": "^2.13.1",
     "ytdl-core": "^4.11.5"
   },
-  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tas33n/Goat-WhatsApp-Bot.git"

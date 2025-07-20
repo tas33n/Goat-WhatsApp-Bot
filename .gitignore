@@ -10,7 +10,7 @@ yarn-error.log
 .vscode/
 .idea/
 .vscode-test/
-
+ *.dev.*
 # Ignore everything in the session folder (all files and subfolders)
 session/**
 # Ignore everything in the database/data folder (all files and subfolders)
@@ -20,3 +20,6 @@ database/data/**
 config.json
 database/data/*
 !database/data/.gitkeep
+bot/auth.dev.js
+bot/connect.dev.js
+bot/handler.dev.js
