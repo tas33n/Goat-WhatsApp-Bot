@@ -4,7 +4,7 @@ Description: A WhatsApp bot built with Node.js, designed to automate tasks and p
 Author: Mohammad Alamin & Taseen
 Version: 1.0.0
 License: MIT
-Repository: https://github.com/anbuinfosec/Goat-WhatsApp-Bot
+Repository: https://github.com/tas33n/Goat-WhatsApp-Bot
 */
 
 const { spawn } = require("child_process")

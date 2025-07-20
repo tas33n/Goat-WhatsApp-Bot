@@ -1,10 +1,14 @@
 {
   "name": "goat-whatsapp-bot",
   "version": "1.0.2",
-  "author": "anbuinfosec",
+  "author": "tas33n",
   "license": "MIT",
   "description": "Modular WhatsApp bot using Baileys with robust authentication flow.",
   "main": "Goat.js",
+  "engines": {
+    "node": ">=20.18",
+    "npm": ">=7.0.0"
+  },
   "scripts": {
     "start": "node Goat.js"
   },
@@ -33,5 +37,15 @@
     "youtube-dl-exec": "^3.0.22",
     "yt-search": "^2.13.1",
     "ytdl-core": "^4.11.5"
-  }
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tas33n/Goat-WhatsApp-Bot.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/tas33n/Goat-WhatsApp-Bot/issues"
+  },
+  "homepage": "https://github.com/tas33n/Goat-WhatsApp-Bot#readme"
 }

@@ -18,6 +18,5 @@ database/data/**
 
 # You can add exceptions below if needed (e.g., !database/data/.keep)
 config.json
-database/data/user.json
-database/data/thread.json
-database/data/user.json
+database/data/*
+!database/data/.gitkeep

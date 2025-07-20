@@ -555,7 +555,7 @@ async function storeMessageData(db, messageId, msg, body, sender, threadId, time
       type: getMessageType(msg),
       quoted: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage ? true : false,
       mentions: msg.message?.extendedTextMessage?.contextInfo?.mentionedJid || [],
-      isGroup: threadId.endsWith("@g.us"),
+      isGroup: threadId?.endsWith("@g.us") || "",
       raw: msg // Store raw message for debugging
     };
     
