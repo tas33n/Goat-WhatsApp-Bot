@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://i.ibb.co/RQ28H2p/banner.png" alt="Goat WhatsApp Bot Banner">
+  <img src="https://i.postimg.cc/zXJbvxLx/photo-2025-07-20-14-58-55.jpg" alt="Goat WhatsApp Bot Banner">
 </p>
 
 <h1 align="center">🐐 Goat WhatsApp Bot</h1>
