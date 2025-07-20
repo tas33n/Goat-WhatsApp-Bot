@@ -1,54 +1,81 @@
-# 🐐 GOAT WhatsApp Bot Documentation
 
-## Overview
-A modular WhatsApp bot for Node.js, supporting plugins, media, and database.
+# 📖 Goat WhatsApp Bot Documentation
 
-## Command System
-- Place command files in `plugins/commands/`
-- Each command exports a config and handler
+This document provides an overview of the bot architecture, plugin system, and advanced usage.
 
-### Example Command
+## 🧠 Architecture
+
+```
+Goat-WhatsApp-Bot/
+├── plugins/
+│   ├── commands/     # All command plugins
+│   └── events/       # All event listeners
+├── core/             # Auth, handlers, loader
+├── auth/             # WhatsApp session data
+├── dashboard/        # Web dashboard interface
+├── config.json       # Configurable settings
+├── bot.js            # Entrypoint
+```
+
+## 🔌 Plugin System
+
+### Command Structure
+
+Create a file inside `plugins/commands/`:
+
 ```js
 module.exports = {
   config: {
     name: "ping",
     description: "Ping command",
+    aliases: ["p"],
+    author: "Tas33n",
+    cooldown: 5,
+    role: 0,
+    category: "utility"
   },
-  onCmd: async ({ reply }) => reply("Pong!")
-};
-```
-
-## Event System
-- Place event files in `plugins/events/`
-- Each event exports a config and handler
-
-### Example Event
-```js
-module.exports = {
-  config: { name: "welcome" },
-  onEvent: async ({ api, event }) => {
-    if (event.action !== "add") return;
-    for (const user of event.participants) {
-      api.sendMessage(event.id, { text: `Welcome, @${user.split("@")[0]}!`, mentions: [user] });
-    }
+  onCmd: async ({ reply }) => {
+    reply("Pong!");
   }
 };
 ```
 
-## Database
-- JSON: `database/data.json`, `database/manager.js`
-- MongoDB: `database/mongodb.js`
+### Event Listener Structure
 
-### Example Usage
+Inside `plugins/events/`:
+
 ```js
-const db = require("../database/manager.js");
-const data = db.get();
-db.set({ ...data, newKey: "value" });
+module.exports = {
+  config: {
+    name: "welcome",
+    author: "Anbuinfosec",
+    category: "events"
+  },
+  onEvent: async ({ api, event }) => {
+    // Handle new participants
+  }
+};
 ```
 
-## Session Management
-- Session files in `session/`
-- Credentials auto-managed
+## 🌐 Dashboard
 
-## Configuration
-- Edit `config.json` for prefix, admins, etc.
+- `/dashboard` - Overview and stats
+- `/login` - Secure login panel
+- `/settings` - Bot toggles, plugin control
+
+> Built with simple HTML/CSS + JS, no frontend framework.
+
+## 🧩 Extending
+
+- Add DB integrations by modifying `core/database.js`
+- Add more languages in `/languages` directory
+- Customize welcome/leave messages in `config.json`
+
+## 📄 Contributing
+
+Pull requests are welcome! Follow these guidelines:
+- Format code with Prettier
+- Add JSDoc to new files
+- Include your name in plugin author
+
+---

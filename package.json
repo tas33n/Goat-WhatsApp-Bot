@@ -1,6 +1,6 @@
 {
   "name": "goat-whatsapp-bot",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "tas33n",
   "license": "MIT",
   "description": "Modular WhatsApp bot using Baileys with robust authentication flow.",
