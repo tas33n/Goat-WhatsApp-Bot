@@ -199,6 +199,7 @@ Let’s build better tools — together.
 
 * 🐐 [GoatBot V2](https://github.com/ntkhang03/Goat-Bot-V2) – A Messenger chatbot project that inspired the modular plugin-based architecture and command flow.
 * 📡 [Baileys](https://github.com/WhiskeySockets/Baileys) – For their awesome WhatsApp Web API library that powers the bot.
+* 🤖 [ChatGPT](https://openai.com/chatgpt) – For help with writing, refactoring, and improving documentation, Docker setup, and best practices.
 
 ---
 
