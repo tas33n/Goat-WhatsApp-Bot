@@ -26,13 +26,12 @@ A clean, modular, and production-ready WhatsApp chatbot using personal accounts 
 
 ## 🧠 About
 
-We explored many WhatsApp bot repositories but found most to be bloated, buggy, or unusable. So we built our own from scratch — clean, modular, and reliable.
+Goat WhatsApp Bot was built with a single goal: to offer a lightweight, stable, and developer-friendly chatbot platform for WhatsApp. It’s crafted from the ground up with clarity, modularity, and maintainability in mind — making it easier for developers to understand, extend, and collaborate on.
 
-**Inspired by:**  
-- [GoatBot V2](https://github.com/ntkhang03/Goat-Bot-V2)  
-- [Baileys](https://github.com/WhiskeySockets/Baileys)
+With clean, fully readable code (no obfuscation or encryption), this project is designed to help developers of all levels learn, modify, and extend it with confidence.
 
 > **🎯 Built for Developers. Shared with the Community.**
+
 
 ---
 
@@ -49,11 +48,58 @@ We explored many WhatsApp bot repositories but found most to be bloated, buggy, 
 
 ---
 
-## 🚀 Getting Started
+# 🛠️ Installation Guide
 
-For step-by-step installation, see [INSTALL.md](./INSTALL.md)
+Follow these steps to get the bot running on your machine.
 
-For detailed documentation, see [DOCS.md](./DOCS.md)
+## 📦 Requirements
+
+- Node.js >= 20.x — [Download here](https://nodejs.org/)
+- Git (optional but recommended)
+- WhatsApp account (use a secondary or throwaway account)
+
+## 🚀 Quick Start
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/tas33n/Goat-WhatsApp-Bot.git
+cd Goat-WhatsApp-Bot
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Start the Bot
+
+```bash
+npm start
+```
+
+The bot will prompt you to scan a QR code (for the first time login).
+
+## 🐳 Optional: Run with Docker
+
+A ready-to-use `Dockerfile` is included with Node.js 20 and FFmpeg preinstalled.
+
+```bash
+# Build the Docker image
+docker build -t goat-whatsapp-bot .
+
+# Run the bot container interactively
+docker run -it goat-whatsapp-bot
+
+# Run the bot with persistent session
+docker run -it -p 3000:3000 -v $(pwd)/session:/app/session goat-whatsapp-bot
+
+```
+
+## ✅ Authentication Note
+
+If you want to reuse the session, your credentials are stored locally in `session/` folder. **Do not share it.**
 
 ---
 
@@ -100,6 +146,7 @@ module.exports = {
   }
 };
 ```
+For detailed documentation, see [DOCS.md](./DOCS.md)
 
 ---
 
@@ -107,7 +154,6 @@ module.exports = {
 
 <details>
 <summary>🤖 Bot Commands</summary>
-
 
 * **Bot sample commands** <img src="https://i.postimg.cc/HsptyzGZ/photo-2025-07-20-14-50-50.jpg" width="400px">
 
@@ -124,6 +170,24 @@ module.exports = {
 
 ---
 
+## 🙋‍♂️ Contributing
+
+We welcome contributions from developers of all skill levels! Whether it's fixing bugs, suggesting features, or improving documentation — your input makes this project better.
+
+Please feel free to [open an issue](https://github.com/tas33n/Goat-WhatsApp-Bot/issues) or submit a pull request.
+
+---
+
+## 🚫 Respect the Project & Credits
+
+This project is licensed under the MIT License, which allows you to use and modify it freely. However, **please do not remove author credits or attempt to rebrand this project as your own.**
+
+Doing so hurts community collaboration and makes it harder to track real improvements. If you want to build on this, we encourage you to fork it **and credit the original authors** so others know where the foundation came from.
+
+Let’s build better tools — together.
+
+---
+
 ## 🙌 Authors
 
 * 👨‍💻 Lead Author: [Tas33n](https://github.com/tas33n)
@@ -133,8 +197,26 @@ module.exports = {
 
 ## 🙏 Acknowledgements
 
-* 🐐 [GoatBot V2](https://github.com/ntkhang03/Goat-Bot-V2)
-* 📡 [Baileys](https://github.com/WhiskeySockets/Baileys)
+* 🐐 [GoatBot V2](https://github.com/ntkhang03/Goat-Bot-V2) – A Messenger chatbot project that inspired the modular plugin-based architecture and command flow.
+* 📡 [Baileys](https://github.com/WhiskeySockets/Baileys) – For their awesome WhatsApp Web API library that powers the bot.
+
+---
+
+## 💰 Support & Donations
+
+If you find this project helpful and want to support further development, donations are appreciated 🙏
+
+### 🏦 Binance Pay
+Binance ID: **471390205**
+
+### 💵 USDT (TRC-20)
+`TR95UPDfsB1Ammyj4w62xDuAJEA8wH5GSz`
+
+### 💸 Litecoin (LTC)
+`LeaKUHCiAhRa6U3jrQa4bCAvaAfniJ6pXP`
+
+### 💸 Bitcoin (BTC)
+`16NyoNtkDk8uHejqNsKkhpc8RyPEEfu1m9`
 
 ---
 

@@ -17,7 +17,7 @@ session/**
 database/data/**
 
 # You can add exceptions below if needed (e.g., !database/data/.keep)
-config.json
+# config.json
 database/data/*
 !database/data/.gitkeep
 bot/auth.dev.js
