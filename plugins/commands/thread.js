@@ -23,6 +23,8 @@ module.exports = {
       }
       
       const threadData = await DataUtils.getThread(threadId);
+
+      console.log(threadData)
       
       if (args.length === 0 || args[0] === "info") {
         // Show thread information

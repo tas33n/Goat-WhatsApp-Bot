@@ -31,17 +31,19 @@ async function handleDecryptionError(remoteJid, error) {
   try {
     const errorCount = decryptionErrors.get(remoteJid) || 0;
     decryptionErrors.set(remoteJid, errorCount + 1);
-    
-    logger.warn(`🔑 Decryption error for ${remoteJid} (count: ${errorCount + 1}): ${error.message}`);
-    
+
+    logger.warn(
+      `🔑 Decryption error for ${remoteJid} (count: ${errorCount + 1}): ${error.message}`
+    );
+
     // If we have too many decryption errors for this contact, clear their session
     if (errorCount > 5) {
       logger.warn(`🔑 Too many decryption errors for ${remoteJid}, clearing session data`);
-      
+
       // Clear session files for this specific contact
       const sessionPath = path.join(process.cwd(), "session");
       const sessionFiles = await fs.readdir(sessionPath);
-      
+
       for (const file of sessionFiles) {
         if (file.includes(remoteJid.replace("@", "").replace(".", ""))) {
           const filePath = path.join(sessionPath, file);
@@ -49,7 +51,7 @@ async function handleDecryptionError(remoteJid, error) {
           logger.info(`🗑️ Removed session file: ${file}`);
         }
       }
-      
+
       // Reset error count
       decryptionErrors.delete(remoteJid);
     }
@@ -138,7 +140,7 @@ async function startConnection(phoneNumber = null, resolve, reject) {
     if (state.creds && state.creds.me) {
       const sessionPath = path.join(process.cwd(), "session");
       const sessionFiles = await fs.readdir(sessionPath);
-      
+
       // Check for corrupted session files
       const corruptedFiles = [];
       for (const file of sessionFiles) {
@@ -152,7 +154,7 @@ async function startConnection(phoneNumber = null, resolve, reject) {
           }
         }
       }
-      
+
       // Remove corrupted session files
       if (corruptedFiles.length > 0) {
         logger.warn(`🔧 Found ${corruptedFiles.length} corrupted session files, removing...`);
@@ -231,23 +233,23 @@ async function startConnection(phoneNumber = null, resolve, reject) {
 
       if (qr && !phoneNumber) {
         authManager?.showConnectionStatus("qr_ready");
-        
+
         // Generate QR code for dashboard
         try {
           const qrDataURL = await QRCode.toDataURL(qr, {
             width: 256,
             margin: 2,
             color: {
-              dark: '#000000',
-              light: '#FFFFFF'
-            }
+              dark: "#000000",
+              light: "#FFFFFF",
+            },
           });
           global.GoatBot.qrCode = qrDataURL;
         } catch (error) {
           logger.error("Error generating QR code:", error);
           global.GoatBot.qrCode = null;
         }
-        
+
         // Dynamically adjust QR code size based on console width
         const consoleWidth = process.stdout.columns || 80; // Default to 80 if undefined
         const qrSize = Math.min(Math.floor(consoleWidth / 2), 30); // Limit to half console width or 20 chars
@@ -324,7 +326,7 @@ async function startConnection(phoneNumber = null, resolve, reject) {
         global.GoatBot.qrCode = null; // Clear QR code after connection
         global.GoatBot.sock = sock; // Store socket for later use
 
-      /*  logger.info("📦 Loading plugins...");
+        /*  logger.info("📦 Loading plugins...");
         try {
           loadPlugins(logger);
           logger.info("✅ All plugins loaded successfully");
@@ -345,10 +347,11 @@ async function startConnection(phoneNumber = null, resolve, reject) {
     // Add session monitoring
     sock.ev.on("connection.update", (update) => {
       const { connection, lastDisconnect } = update;
-      
+
       if (connection === "close") {
-        const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
-        
+        const shouldReconnect =
+          lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
+
         if (shouldReconnect) {
           logger.info("🔄 Connection lost, attempting to reconnect...");
           setTimeout(() => {
@@ -370,24 +373,35 @@ async function startConnection(phoneNumber = null, resolve, reject) {
         if (config.antiInbox && !msg.key.remoteJid.endsWith("@g.us")) return;
 
         global.GoatBot.stats.messagesProcessed++;
-        
+
         try {
-          await messageHandler({ sock, msg, config, db: require("../database/manager"), logger });
+          await messageHandler({
+            sock,
+            event: m,
+            msg,
+            config,
+            db: require("../database/manager"),
+            logger,
+          });
         } catch (messageError) {
+          console.error("❌ Error processing message:", messageError);
           // Handle specific decryption errors
-          if (messageError.message?.includes("Bad MAC") || 
-              messageError.message?.includes("decrypt") ||
-              messageError.message?.includes("Failed to decrypt")) {
-            
-            logger.warn(`🔑 Message decryption failed for ${msg.key.remoteJid}: ${messageError.message}`);
-            
+          if (
+            messageError.message?.includes("Bad MAC") ||
+            messageError.message?.includes("decrypt") ||
+            messageError.message?.includes("Failed to decrypt")
+          ) {
+            logger.warn(
+              `🔑 Message decryption failed for ${msg.key.remoteJid}: ${messageError.message}`
+            );
+
             // Handle the decryption error
             await handleDecryptionError(msg.key.remoteJid, messageError);
-            
+
             // Don't crash, just continue
             return;
           }
-          
+
           // For other errors, log and continue
           logger.error(`❌ Message processing error: ${messageError.message}`);
           global.GoatBot.stats.errors++;
@@ -397,11 +411,11 @@ async function startConnection(phoneNumber = null, resolve, reject) {
         if (error.message?.includes("Bad MAC") || error.message?.includes("session")) {
           logger.error("❌ Session error detected:", error.message);
           logger.info("🔄 Attempting to restart connection...");
-          
+
           // Mark as disconnected
           global.GoatBot.isConnected = false;
           global.GoatBot.sessionValid = false;
-          
+
           // Restart the process
           setTimeout(() => {
             process.exit(2); // Exit with restart code
@@ -421,7 +435,7 @@ async function startConnection(phoneNumber = null, resolve, reject) {
         if (welcomeEvent) {
           const DataUtils = require("../libs/dataUtils");
           const { getUserName } = require("../libs/utils");
-          
+
           // Create utility objects similar to command handler
           const user = {
             getUser: async (userId) => await DataUtils.getUser(userId),
@@ -429,20 +443,20 @@ async function startConnection(phoneNumber = null, resolve, reject) {
             addExperience: async (userId, amount) => {
               const userData = await DataUtils.getUser(userId);
               await DataUtils.updateUser(userId, {
-                experience: (userData.experience || 0) + amount
+                experience: (userData.experience || 0) + amount,
               });
-            }
+            },
           };
-          
+
           const thread = {
             getThread: async (threadId) => await DataUtils.getThread(threadId || update.id),
-            updateThread: async (data) => await DataUtils.updateThread(update.id, data)
+            updateThread: async (data) => await DataUtils.updateThread(update.id, data),
           };
-          
+
           const utils = {
-            getUserName: async (userId) => await getUserName(userId)
+            getUserName: async (userId) => await getUserName(userId),
           };
-          
+
           await welcomeEvent.onEvent({
             api: sock,
             event: update,
@@ -450,7 +464,7 @@ async function startConnection(phoneNumber = null, resolve, reject) {
             logger,
             user,
             thread,
-            utils
+            utils,
           });
         }
       } catch (error) {

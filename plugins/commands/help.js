@@ -61,6 +61,7 @@ module.exports = {
 
   onCmd: async function ({ api, message, args, db, logger, config, reply, event }) {
     try {
+      console.log(event)
       const senderJid = event.senderID;
       const threadID = event.threadID;
       const { isAdmin } = require("../../libs/utils");

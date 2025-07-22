@@ -1,423 +1,223 @@
-const json = require("../database/json");
+const fs = require("fs-extra");
+const path = require("path");
+const {
+  isAdmin,
+  getUserId,
+  getThreadId,
+  isGroupMessage,
+  getMentions,
+  getUserName,
+  formatTime,
+  isURL,
+} = require("../libs/utils");
+const DataUtils = require("../libs/dataUtils");
+const MessageWrapper = require("../libs/messageWrapper");
+const APIWrapper = require("../libs/apiWrapper");
+const jsonDB = require("../database/json");
 
-module.exports = async ({ sock, msg, config, db, logger }) => {
-  const { isAdmin, getUserId, getThreadId, isGroupMessage, getMentions, getUserName, formatTime, isURL } = require("../libs/utils");
-  const DataUtils = require("../libs/dataUtils");
-  const MessageWrapper = require("../libs/messageWrapper");
-  const APIWrapper = require("../libs/apiWrapper");
-  // Extract message body from various message types
-  const body =
-    msg.message?.conversation ||
-    msg.message?.extendedTextMessage?.text ||
-    msg.message?.imageMessage?.caption ||
-    msg.message?.videoMessage?.caption ||
-    "";
-  
-  // Extract message information
-  const senderJid = getThreadId(msg);
-  const isGroup = isGroupMessage(msg);
-  const sender = getUserId(msg);
-  const messageId = msg.key.id;
-  const timestamp = msg.messageTimestamp;
-  
-  // Store/update user data
-  await storeUserData(db, sender, msg, isGroup);
-  
-  // Store/update thread data
-  await storeThreadData(db, senderJid, msg, isGroup);
-  
-  // Store message data
-  await storeMessageData(db, messageId, msg, body, sender, senderJid, timestamp);
-  
-  // Add experience for sending messages (1 exp per message, max 1 per minute)
-  await addExperienceForMessage(sender, db);
-  
-  // Log all incoming messages with details
-  logger.info(`📨 Received message from ${sender} ${isGroup ? "(group)" : ""}: "${body}"`);
+// Simple in-memory cooldown map per command
+const cooldowns = new Map();
 
-  // Create utility objects for commands
-  const user = {
-    getUser: async (userId) => await DataUtils.getUser(userId || sender),
-    getAllUsers: async () => await DataUtils.getAllUsers(),
-    updateUser: async (userId, data) => await DataUtils.updateUser(userId || sender, data),
-    getUserName: async (userId) => await getUserName(userId || sender),
-    isAdmin: (userId) => isAdmin(userId || sender),
-    getId: () => sender,
-    getJid: () => senderJid,
-    getData: async () => await DataUtils.getUser(sender),
-    ban: async (userId, reason) => await DataUtils.updateUser(userId || sender, { banned: true, banReason: reason, banDate: Date.now() }),
-    unban: async (userId) => await DataUtils.updateUser(userId || sender, { banned: false, banReason: null, banDate: null }),
-    addExp: async (amount) => await DataUtils.updateUser(sender, { exp: (await DataUtils.getUser(sender)).exp + amount }),
-    addMoney: async (amount) => await DataUtils.updateUser(sender, { money: (await DataUtils.getUser(sender)).money + amount }),
-    warn: async (userId, reason) => {
-      const userData = await DataUtils.getUser(userId || sender);
-      const warnings = userData.warnings || [];
-      warnings.push({ reason, date: Date.now() });
-      await DataUtils.updateUser(userId || sender, { warnings });
-      return warnings.length;
-    }
-  };
-
-  const thread = {
-    getThread: async (threadId) => await DataUtils.getThread(threadId || senderJid),
-    getThreadData: async (threadId) => await DataUtils.getThread(threadId || senderJid), // Alias for backward compatibility
-    updateThread: async (threadId, data) => await DataUtils.updateThread(threadId || senderJid, data),
-    getId: () => senderJid,
-    isGroup: () => isGroup,
-    getMembers: async () => {
-      if (!isGroup) return [];
-      try {
-        const groupMetadata = await sock.groupMetadata(senderJid);
-        return groupMetadata.participants.map(p => p.id);
-      } catch (error) {
-        logger.error("Error getting group members:", error);
-        return [];
-      }
-    },
-    getAdmins: async () => {
-      if (!isGroup) return [];
-      try {
-        const groupMetadata = await sock.groupMetadata(senderJid);
-        return groupMetadata.participants.filter(p => p.admin).map(p => p.id);
-      } catch (error) {
-        logger.error("Error getting group admins:", error);
-        return [];
-      }
-    },
-    kick: async (userId) => {
-      if (!isGroup) return false;
-      try {
-        await sock.groupParticipantsUpdate(senderJid, [userId], "remove");
-        return true;
-      } catch (error) {
-        logger.error("Error kicking user:", error);
-        return false;
-      }
-    },
-    add: async (userId) => {
-      if (!isGroup) return false;
-      try {
-        await sock.groupParticipantsUpdate(senderJid, [userId], "add");
-        return true;
-      } catch (error) {
-        logger.error("Error adding user:", error);
-        return false;
-      }
-    }
-  };
-
-  const role = {
-    getRole: async (userId) => {
-      // Check if user is bot admin first (highest priority)
-      if (isAdmin(userId || sender, config)) return 2; // Bot admin
-      
-      // Check if user is group admin (only in groups)
-      if (isGroup) {
-        try {
-          const groupMetadata = await sock.groupMetadata(senderJid);
-          const participant = groupMetadata.participants.find(p => p.id === (userId || sender));
-          if (participant && (participant.admin === 'admin' || participant.admin === 'superadmin')) {
-            return 1; // Group admin
-          }
-        } catch (error) {
-          logger.error("Error checking group admin status:", error);
-        }
-      }
-      
-      // Check database for moderator status (fallback)
-      const userData = await DataUtils.getUser(userId || sender);
-      if (userData.moderator) return 1; // Moderator
-      
-      return 0; // Regular user
-    },
-    isAdmin: (userId) => isAdmin(userId || sender, config),
-    isModerator: async (userId) => {
-      const userData = await DataUtils.getUser(userId || sender);
-      return userData.moderator || false;
-    },
-    promote: async (userId) => await DataUtils.updateUser(userId, { moderator: true }),
-    demote: async (userId) => await DataUtils.updateUser(userId, { moderator: false }),
-    hasPermission: async (userId, requiredRole) => {
-      const userRole = await role.getRole(userId);
-      
-      // Bot admins (role 2) can access all commands (role 0, 1, 2, 3)
-      if (userRole === 2) return true;
-      
-      // Group admins (role 1) can access role 0 and 1 commands
-      if (userRole === 1 && requiredRole <= 1) return true;
-      
-      // Regular users (role 0) can only access role 0 commands
-      if (userRole === 0 && requiredRole === 0) return true;
-      
-      return false;
-    }
-  };
-
-  // Create GoatBot V2 style message object
-  const message = new MessageWrapper(sock, msg, config, logger);
-  
-  // Create GoatBot V2 style API object
-  const api = new APIWrapper(sock, config, logger);
-
-  const reply = async (text, options = {}) => {
-    return await message.reply(text, options);
-  };
-
-  const react = async (emoji) => {
-    return await message.react(emoji);
-  };
-
-  const edit = async (messageKey, newText) => {
-    return await message.edit(newText, messageKey);
-  };
-
-  const utils = {
-    formatTime,
-    isURL,
-    getMentions: () => getMentions(msg),
-    sleep: (ms) => new Promise(resolve => setTimeout(resolve, ms)),
-    random: (min, max) => Math.floor(Math.random() * (max - min + 1)) + min,
-    formatNumber: (num) => num.toLocaleString(),
-    formatMoney: (amount) => `$${amount.toLocaleString()}`,
-    getPrefix: () => config.prefix,
-    isOwner: (userId) => config.admins.includes(userId || sender)
-  };
-
-  // Handle non-command messages for events
-  if (!body || !body.startsWith(config.prefix)) {
-    // Handle onChat events
-    for (const [eventName, eventHandler] of global.GoatBot.events) {
-      if (eventHandler.config?.type === "chat" || eventHandler.onChat) {
-        try {
-          const eventParams = {
-            sock,
-            api,
-            message,
-            body,
-            user,
-            thread,
-            role,
-            reply,
-            react,
-            edit,
-            utils,
-            config,
-            db,
-            logger
-          };
-          
-          if (eventHandler.onChat) {
-            await eventHandler.onChat(eventParams);
-          }
-        } catch (error) {
-          logger.error(`Error in event ${eventName}:`, error);
-        }
-      }
-    }
-    
-    // Handle onChat for commands (non-prefix messages)
-    for (const [commandName, command] of global.GoatBot.commands) {
-      if (command.onChat) {
-        try {
-          const commandParams = {
-            sock,
-            api,
-            message,
-            body,
-            user,
-            thread,
-            role,
-            reply,
-            react,
-            edit,
-            utils,
-            config,
-            db,
-            logger
-          };
-          
-          await command.onChat(commandParams);
-        } catch (error) {
-          logger.error(`Error in command ${commandName} onChat:`, error);
-        }
-      }
-    }
-    
-    // Handle onReply for commands (when someone replies to bot's message)
-    const hasReply = msg.message?.extendedTextMessage?.contextInfo?.quotedMessage || 
-                     msg.message?.conversation?.contextInfo?.quotedMessage;
-    
-    if (hasReply) {
-      const contextInfo = msg.message?.extendedTextMessage?.contextInfo || msg.message?.conversation?.contextInfo;
-      const quotedMessage = contextInfo?.quotedMessage;
-      const quotedMessageId = contextInfo?.stanzaId;
-      const quotedParticipant = contextInfo?.participant;
-      
-      logger.info(`📝 Reply detected - quotedParticipant: ${quotedParticipant}, botId: ${sock.user?.id}`);
-      
-      // Check if the quoted message is from the bot
-      // The bot's ID should be in the format: bot_number@s.whatsapp.net
-      const botId = sock.user?.id?.replace(/:\d+/, '') || sock.user?.id;
-      const isReplyToBot = quotedParticipant === botId || 
-                           quotedParticipant === sock.user?.id ||
-                           (!quotedParticipant && !isGroup); // Direct message reply
-      
-      logger.info(`📝 Reply check - isReplyToBot: ${isReplyToBot}, quotedParticipant: ${quotedParticipant}, botId: ${botId}`);
-      
-      if (isReplyToBot) {
-        logger.info(`📝 Reply to bot detected from ${sender}`);
-        
-        // Look for commands that have onReply handlers
-        for (const [commandName, command] of global.GoatBot.commands) {
-          if (command.onReply) {
-            try {
-              const replyParams = {
-                sock,
-                api,
-                message,
-                body,
-                user,
-                thread,
-                role,
-                reply,
-                react,
-                edit,
-                utils,
-                config,
-                db,
-                logger,
-                quotedMessage,
-                quotedMessageId,
-                quotedParticipant
-              };
-              
-              await command.onReply(replyParams);
-            } catch (error) {
-              logger.error(`Error in command ${commandName} onReply:`, error);
-            }
-          }
-        }
-      }
-    } else {
-      logger.info(`📝 No reply detected - message type: ${Object.keys(msg.message || {}).join(', ')}`);
-    }
-    
-    logger.debug(`ℹ️ Message ignored: ${body ? "Not a command" : "Empty message"}`);
-    return;
-  }
-
-  // Check if user is banned
-  const userData = await DataUtils.getUser(sender);
-  if (userData.banned) {
-    logger.warn(`🚫 Banned user tried to use command: ${sender}`);
-    return sock.sendMessage(
-      senderJid,
-      { text: `🚫 You are banned from using this bot.\n\nReason: ${userData.banReason || "No reason provided"}\nBan Date: ${userData.banDate ? new Date(userData.banDate).toLocaleString() : "Unknown"}` },
-      { quoted: msg }
-    );
-  }
-
-  // Parse command and arguments
-  const args = body.slice(config.prefix.length).trim().split(/ +/);
-  const commandName = args.shift().toLowerCase();
-  logger.debug(`🔍 Parsing command: "${commandName}" with args: [${args.join(", ")}]`);
-
-  // Find command or alias
-  const command =
-    global.GoatBot.commands.get(commandName) ||
-    global.GoatBot.commands.get(global.GoatBot.aliases.get(commandName));
-
-  if (!command) {
-    logger.warn(`⚠️ Command not found: "${commandName}"`);
-    return sock.sendMessage(
-      senderJid,
-      { text: `❌ Command "${commandName}" not found.` },
-      { quoted: msg },
-    );
-  }
-
-  // Check thread admin-only mode
-  if (isGroup) {
-    const threadData = await DataUtils.getThread(senderJid);
-    if (threadData && threadData.settings && threadData.settings.adminOnly && !isAdmin(sender, config)) {
-      logger.warn(`🔒 Non-admin tried to use command in admin-only thread: ${sender}`);
-      return sock.sendMessage(
-        senderJid,
-        { text: "🔒 This group is in admin-only mode. Only admins can use bot commands." },
-        { quoted: msg }
-      );
-    }
-  }
-
-  // Permission & Role Check
-  const userRole = await role.getRole(sender);
-  const hasPermission = await role.hasPermission(sender, command.config.role);
-  
-  logger.debug(`👤 User ${sender} role: ${userRole} (required: ${command.config.role}) - Permission: ${hasPermission}`);
-
-  if (!hasPermission) {
-    logger.warn(`🚫 Permission denied for ${sender} on command "${command.config.name}"`);
-    return sock.sendMessage(
-      senderJid,
-      { text: "❌ You lack the required permissions to use this command." },
-      { quoted: msg },
-    );
-  }
-
-  // Construct event object for commandParams
-  
-  const event = {
-    senderName: msg.pushName || msg.verifiedBizName || "Unknown",
-    senderID: sender || msg.key?.participant || "",
-    threadID: senderJid || msg.key?.remoteJid || "",
-    messageID: messageId || "",
-    isGroup,
-    body,
-    timestamp,
-    mentions: utils.getMentions(),
-    mentionedJid: msg.message?.extendedTextMessage?.contextInfo?.mentionedJid || [],
-    quotedMessage: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage || null,
-    quotedMessageId: msg.message?.extendedTextMessage?.contextInfo?.stanzaId || null,
-    quotedParticipant: msg.message?.extendedTextMessage?.contextInfo?.participant || null,
-    replyData: {
-      message: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.message?.conversation || null,
-      participant: msg.message?.extendedTextMessage?.contextInfo?.participant || null,
-      messageId: msg.message?.extendedTextMessage?.contextInfo?.stanzaId || null,
-      body: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.message?.conversation || null
-    },
-    raw: JSON.stringify(msg, null, 2)
-  };
-  // Cooldown Check
-  const now = Date.now();
-  const timestamps = global.GoatBot.cooldowns.get(command.config.name) || new Map();
-  const cooldownAmount = (command.config.countDown || 3) * 1000;
-
-  if (timestamps.has(sender)) {
-    const expirationTime = timestamps.get(sender) + cooldownAmount;
-    if (now < expirationTime) {
-      const timeLeft = (expirationTime - now) / 1000;
-      logger.info(`⏰ Cooldown active for ${sender} on "${command.config.name}": ${timeLeft.toFixed(1)}s remaining`);
-      return sock.sendMessage(
-        senderJid,
-        { text: `⏰ Please wait ${timeLeft.toFixed(1)}s before reusing this command.` },
-        { quoted: msg },
-      );
-    }
-  }
-  timestamps.set(sender, now);
-  global.GoatBot.cooldowns.set(command.config.name, timestamps);
-
+/**
+ * Unified handler for incoming Baileys events (messages upsert, group updates).
+ */
+module.exports = async function handleMessage({ sock, event, msg, config, db, logger }) {
   try {
-    if (config.logCommands) {
-      logger.info(`⚡ Executing: ${command.config.name} by ${sender} with args: [${args.join(", ")}]`);
+    // Determine raw message payload for messages.upsert
+    let rawMsg = msg;
+    if (event?.messages) rawMsg = event.messages[0];
+    if (!rawMsg || !rawMsg.message) {
+      logger.debug("No message payload in event, skipping");
+      return;
     }
 
-    global.GoatBot.stats.commandsExecuted++;
+    // Extract common fields
+    const sender = getUserId(rawMsg);
+    const threadId = getThreadId(rawMsg);
+    const isGroup = isGroupMessage(rawMsg);
+    const body =
+      rawMsg.message?.conversation ||
+      rawMsg.message?.extendedTextMessage?.text ||
+      rawMsg.message?.imageMessage?.caption ||
+      rawMsg.message?.videoMessage?.caption ||
+      "";
+    const timestamp = rawMsg.messageTimestamp;
 
-    // Create comprehensive command parameters
-    const commandParams = {
+    // Persist metadata
+    await Promise.all([
+      storeUserData(db, sender, rawMsg, isGroup),
+      storeThreadData(db, threadId, rawMsg, isGroup),
+      storeMessageData(db, rawMsg.key.id, rawMsg, body, sender, threadId, timestamp),
+      addExperienceForMessage(sender, db),
+    ]);
+
+    logger.info(`📨 Received from ${sender}${isGroup ? " (group)" : ""}: "${body}"`);
+
+    // Prepare helpers
+    const user = makeUserHelpers(sender, threadId, rawMsg, sock, db, config, logger);
+    const thread = makeThreadHelpers(threadId, rawMsg, sock, isGroup, logger);
+    const role = makeRoleHelpers(sender, threadId, isGroup, sock, db, config, logger);
+    const message = new MessageWrapper(sock, rawMsg, config, logger);
+    const api = new APIWrapper(sock, config, logger);
+    const utils = {
+      formatTime,
+      isURL,
+      getMentions: () => getMentions(rawMsg),
+      sleep: (ms) => new Promise((r) => setTimeout(r, ms)),
+      random: (min, max) => Math.floor(Math.random() * (max - min + 1)) + min,
+      formatNumber: (num) => num.toLocaleString(),
+      formatMoney: (amt) => `$${amt.toLocaleString()}`,
+      getPrefix: () => config.prefix,
+      isOwner: (uid) => config.admins.includes(uid || sender),
+    };
+    const reply = (txt, opts) => message.reply(txt, opts);
+    const react = (emj) => message.react(emj);
+    const edit = (key, txt) => message.edit(txt, key);
+
+    // Build event object for commands
+    const eventData = {
+      senderName: rawMsg.pushName || rawMsg.verifiedBizName || "Unknown",
+      senderID: sender,
+      threadID: threadId,
+      messageID: rawMsg.key.id,
+      isGroup,
+      body,
+      timestamp,
+      mentions: getMentions(rawMsg),
+      mentionedJid: rawMsg.message?.extendedTextMessage?.contextInfo?.mentionedJid || [],
+      quotedMessage: rawMsg.message?.extendedTextMessage?.contextInfo?.quotedMessage || null,
+      quotedMessageId: rawMsg.message?.extendedTextMessage?.contextInfo?.stanzaId || null,
+      quotedParticipant: rawMsg.message?.extendedTextMessage?.contextInfo?.participant || null,
+      raw: event,
+    };
+
+    // Non-command: onChat / onReply handlers
+    if (!body.startsWith(config.prefix)) {
+      for (const [ename, handler] of global.GoatBot.events) {
+        if (handler.onChat)
+          await safeInvoke(() =>
+            handler.onChat({
+              sock,
+              api,
+              message,
+              body,
+              user,
+              thread,
+              role,
+              reply,
+              react,
+              edit,
+              utils,
+              config,
+              db,
+              logger,
+            })
+          );
+      }
+      for (const [cname, cmd] of global.GoatBot.commands) {
+        if (cmd.onChat)
+          await safeInvoke(() =>
+            cmd.onChat({
+              sock,
+              api,
+              message,
+              body,
+              user,
+              thread,
+              role,
+              reply,
+              react,
+              edit,
+              utils,
+              config,
+              db,
+              logger,
+            })
+          );
+      }
+      const ctx = rawMsg.message.extendedTextMessage?.contextInfo;
+      const quoted = ctx?.quotedMessage;
+      if (quoted && ctx.participant) {
+        const botId = sock.user?.id?.split(":")[0];
+        if (ctx.participant === botId) {
+          for (const [cname, cmd] of global.GoatBot.commands) {
+            if (cmd.onReply)
+              await safeInvoke(() =>
+                cmd.onReply({
+                  sock,
+                  api,
+                  message,
+                  body,
+                  user,
+                  thread,
+                  role,
+                  reply,
+                  react,
+                  edit,
+                  utils,
+                  config,
+                  db,
+                  logger,
+                  quotedMessage: quoted,
+                  quotedMessageId: ctx.stanzaId,
+                  quotedParticipant: ctx.participant,
+                })
+              );
+          }
+        }
+      }
+      return;
+    }
+
+    // Check ban
+    const udata = await DataUtils.getUser(sender);
+    if (udata.banned) {
+      return sock.sendMessage(
+        threadId,
+        { text: `🚫 You are banned. Reason: ${udata.banReason || "None"}` },
+        { quoted: rawMsg }
+      );
+    }
+
+    // Parse command
+    const parts = body.slice(config.prefix.length).trim().split(/ +/);
+    const cmdName = parts.shift().toLowerCase();
+    const args = parts;
+    const command =
+      global.GoatBot.commands.get(cmdName) ||
+      global.GoatBot.commands.get(global.GoatBot.aliases.get(cmdName));
+    if (!command) return reply(`❌ Command "${cmdName}" not found.`);
+
+    // Admin-only group
+    if (isGroup) {
+      const tdata = await db.get(`thread_${threadId}`);
+      if (tdata?.settings?.adminOnly && !isAdmin(sender, config))
+        return reply("🔒 Only admins can use commands in this group.");
+    }
+
+    // Permission
+    if (!(await role.hasPermission(command.config.role))) return reply("❌ You lack permissions.");
+
+    // Cooldown per command
+    const cd = command.config.countDown || 0;
+    if (cd > 0) {
+      if (!cooldowns.has(command.config.name)) cooldowns.set(command.config.name, new Map());
+      const map = cooldowns.get(command.config.name);
+      const last = map.get(sender) || 0;
+      const now = Date.now();
+      if (now - last < cd * 1000) {
+        const timeLeft = ((cd * 1000 - (now - last)) / 1000).toFixed(1);
+        return reply(`⏰ Wait ${timeLeft}s before using this command again.`);
+      }
+      map.set(sender, now);
+    }
+
+    // Execute
+    global.GoatBot.stats.commandsExecuted++;
+    logger.info(`⚡ ${cmdName} by ${sender}`);
+    const fn = command.onCmd || command.onStart || command.execute;
+    const params = {
       sock,
-      event,
       api,
       message,
       args,
@@ -430,189 +230,222 @@ module.exports = async ({ sock, msg, config, db, logger }) => {
       utils,
       config,
       db,
-      logger
+      logger,
+      event: eventData,
     };
-
-    // Execute the appropriate handler
-    if (command.onCmd) {
-      await command.onCmd(commandParams);
-    } else if (command.onStart) {
-      await command.onStart(commandParams);
-    } else if (command.execute) {
-      // Legacy support
-      await command.execute(commandParams);
-    }
-    
-  } catch (error) {
-    logger.error(`❌ Error in command ${command.config.name}:`, error);
-    global.GoatBot.stats.errors++;
-    await sock.sendMessage(senderJid, { text: `❌ An error occurred: ${error.message}` }, { quoted: msg });
+    await fn.call(command, params);
+  } catch (err) {
+    logger.error("❌ Handler error:", err);
   }
 };
 
-// Helper functions for data management
+// ---------- Data & Helper Functions ----------
+
 async function storeUserData(db, userId, msg, isGroup) {
-  try {
-    const userData = await db.get(`user_${userId}`) || {};
-    
-    // Try to get a better name from various sources
-    let userName = userData.name || 'Unknown';
-    
-    // Check for pushName (WhatsApp display name)
-    if (msg.pushName && msg.pushName !== userName && msg.pushName.trim()) {
-      userName = msg.pushName.trim();
-    }
-    
-    // Check for verifiedName (business accounts)
-    if (msg.verifiedBizName && msg.verifiedBizName !== userName && msg.verifiedBizName.trim()) {
-      userName = msg.verifiedBizName.trim();
-    }
-    
-    // Try to get name from contact info if available
-    if (userName === 'Unknown' && global.GoatBot.sock) {
-      try {
-        const contactInfo = await global.GoatBot.sock.onWhatsApp(userId);
-        if (contactInfo && contactInfo.length > 0 && contactInfo[0].name) {
-          userName = contactInfo[0].name.trim();
-        }
-      } catch (error) {
-        // Silently ignore contact fetch errors
-      }
-    }
-    
-    // Check for notify name (participant name in groups)
-    if (msg.key && msg.key.participant && msg.key.participant === userId) {
-      if (msg.pushName && msg.pushName.trim()) {
-        userName = msg.pushName.trim();
-      }
-    }
-    
-    // If we still have a generic name pattern, update it with actual name
-    if (userName.startsWith('User ') && msg.pushName && msg.pushName.trim()) {
-      userName = msg.pushName.trim();
-    }
-    
-    // Update user information
-    userData.id = userId;
-    userData.name = userName;
-    userData.lastSeen = Date.now();
-    userData.messageCount = (userData.messageCount || 0) + 1;
-    userData.isGroup = isGroup;
-    
-    // Track user activity
-    if (!userData.firstSeen) {
-      userData.firstSeen = Date.now();
-    }
-    
-    // Store additional user info if available
-    if (msg.verifiedBizName) {
-      userData.businessName = msg.verifiedBizName;
-    }
-    
-    await db.set(`user_${userId}`, userData);
-  } catch (error) {
-    console.error('Error storing user data:', error);
-  }
+  const key = `user_${userId}`;
+  const userData = (await db.get(key)) || {};
+  let name = userData.name || msg.pushName || msg.verifiedBizName || "Unknown";
+  Object.assign(userData, {
+    id: userId,
+    name,
+    firstSeen: userData.firstSeen || Date.now(),
+    lastSeen: Date.now(),
+    messageCount: (userData.messageCount || 0) + 1,
+    isGroup,
+  });
+  await db.set(key, userData);
 }
 
 async function storeThreadData(db, threadId, msg, isGroup) {
-  try {
-    const threadData = await db.get(`thread_${threadId}`) || {};
-    
-    // Update thread information
-    threadData.id = threadId;
-    threadData.isGroup = isGroup;
-    threadData.lastActivity = Date.now();
-    threadData.messageCount = (threadData.messageCount || 0) + 1;
-    
-    // For groups, store additional info
-    if (isGroup) {
-      threadData.groupName = msg.pushName || threadData.groupName || 'Unknown Group';
-      threadData.participants = threadData.participants || [];
-      
-      // Add participant if not already in list
-      const senderId = msg.key.participant || msg.key.remoteJid;
-      if (!threadData.participants.includes(senderId)) {
-        threadData.participants.push(senderId);
-      }
-    }
-    
-    // Track thread activity
-    if (!threadData.firstActivity) {
-      threadData.firstActivity = Date.now();
-    }
-    
-    await db.set(`thread_${threadId}`, threadData);
-  } catch (error) {
-    console.error('Error storing thread data:', error);
+  const key = `thread_${threadId}`;
+  const t = (await db.get(key)) || {};
+  Object.assign(t, {
+    id: threadId,
+    isGroup,
+    firstActivity: t.firstActivity || Date.now(),
+    lastActivity: Date.now(),
+    messageCount: (t.messageCount || 0) + 1,
+  });
+  if (isGroup) {
+    t.groupName = t.groupName || msg.pushName;
+    t.participants = t.participants || [];
+    if (!t.participants.includes(msg.key.participant)) t.participants.push(msg.key.participant);
   }
+  await db.set(key, t);
 }
 
 async function storeMessageData(db, messageId, msg, body, sender, threadId, timestamp) {
-  try {
-    const messageData = {
-      id: messageId,
-      body: body,
-      sender: sender,
-      threadId: threadId,
-      timestamp: timestamp || Date.now(),
-      type: getMessageType(msg),
-      quoted: msg.message?.extendedTextMessage?.contextInfo?.quotedMessage ? true : false,
-      mentions: msg.message?.extendedTextMessage?.contextInfo?.mentionedJid || [],
-      isGroup: threadId?.endsWith("@g.us") || "",
-      raw: msg // Store raw message for debugging
-    };
-    
-    // Store message data
-    await db.set(`message_${messageId}`, messageData);
-    
-    // Update thread's recent messages
-    const threadMessages = await db.get(`thread_messages_${threadId}`) || [];
-    threadMessages.push(messageId);
-    
-    // Keep only last 100 messages per thread
-    if (threadMessages.length > 100) {
-      threadMessages.shift();
-    }
-    
-    await db.set(`thread_messages_${threadId}`, threadMessages);
-  } catch (error) {
-    console.error('Error storing message data:', error);
-  }
+  const key = `message_${messageId}`;
+  const m = {
+    id: messageId,
+    body,
+    sender,
+    threadId,
+    timestamp,
+    type: getMessageType(msg),
+    raw: msg,
+  };
+  await db.set(key, m);
+  const arr = (await db.get(`thread_messages_${threadId}`)) || [];
+  arr.push(messageId);
+  if (arr.length > 100) arr.shift();
+  await db.set(`thread_messages_${threadId}`, arr);
 }
 
 function getMessageType(msg) {
-  if (msg.message?.conversation) return 'text';
-  if (msg.message?.extendedTextMessage) return 'extendedText';
-  if (msg.message?.imageMessage) return 'image';
-  if (msg.message?.videoMessage) return 'video';
-  if (msg.message?.audioMessage) return 'audio';
-  if (msg.message?.documentMessage) return 'document';
-  if (msg.message?.stickerMessage) return 'sticker';
-  if (msg.message?.contactMessage) return 'contact';
-  if (msg.message?.locationMessage) return 'location';
-  return 'unknown';
+  if (msg.message?.conversation) return "text";
+  if (msg.message?.extendedTextMessage) return "extendedText";
+  if (msg.message?.imageMessage) return "image";
+  if (msg.message?.videoMessage) return "video";
+  if (msg.message?.audioMessage) return "audio";
+  if (msg.message?.documentMessage) return "document";
+  if (msg.message?.stickerMessage) return "sticker";
+  if (msg.message?.contactMessage) return "contact";
+  if (msg.message?.locationMessage) return "location";
+  return "unknown";
 }
 
 async function addExperienceForMessage(userId, db) {
   try {
-    // Check if user has gained experience in the last minute
-    const lastExpKey = `lastExp_${userId}`;
-    const lastExp = await db.get(lastExpKey);
+    const lastKey = `lastExp_${userId}`;
+    const last = await db.get(lastKey);
     const now = Date.now();
-    
-    if (lastExp && (now - lastExp) < 60000) {
-      // User gained experience less than a minute ago, skip
-      return;
-    }
-    
-    // Add experience using DataUtils
-    const DataUtils = require("../libs/dataUtils");
+    if (last && now - last < 60000) return;
     await DataUtils.addExperience(userId, 1);
-    
-    // Update last experience time
-    await db.set(lastExpKey, now);
-  } catch (error) {
-    console.error('Error adding experience for message:', error);
+    await db.set(lastKey, now);
+  } catch (e) {
+    console.error("Error adding experience for message:", e);
+  }
+}
+
+function makeUserHelpers(sender, senderJid, msg, sock, db, config, logger) {
+  return {
+    getUser: async (userId) => await DataUtils.getUser(userId || sender),
+    getAllUsers: async () => await DataUtils.getAllUsers(),
+    updateUser: async (userId, data) => await DataUtils.updateUser(userId || sender, data),
+    getUserName: async (userId) => await getUserName(userId || sender),
+    isAdmin: (userId) => isAdmin(userId || sender, config),
+    getId: () => sender,
+    getJid: () => senderJid,
+    getData: async () => await DataUtils.getUser(sender),
+    ban: async (userId, reason) =>
+      await DataUtils.updateUser(userId || sender, {
+        banned: true,
+        banReason: reason,
+        banDate: Date.now(),
+      }),
+    unban: async (userId) =>
+      await DataUtils.updateUser(userId || sender, {
+        banned: false,
+        banReason: null,
+        banDate: null,
+      }),
+    addExp: async (amount = 1) => await DataUtils.addExperience(sender, amount),
+    addMoney: async (amount) => {
+      const u = await DataUtils.getUser(sender);
+      return await DataUtils.updateUser(sender, { money: (u.money || 0) + amount });
+    },
+    warn: async (userId, reason) => {
+      const uid = userId || sender;
+      const u = await DataUtils.getUser(uid);
+      const warnings = u.warnings || [];
+      warnings.push({ reason, date: Date.now() });
+      await DataUtils.updateUser(uid, { warnings });
+      return warnings.length;
+    },
+  };
+}
+
+function makeThreadHelpers(threadId, msg, sock, isGroup, logger) {
+  return {
+    getThread: async (id) => await DataUtils.getThread(id || threadId),
+    getThreadData: async (id) => await DataUtils.getThread(id || threadId),
+    updateThread: async (id, data) => await DataUtils.updateThread(id || threadId, data),
+    getId: () => threadId,
+    isGroup: () => isGroup,
+    getMembers: async () => {
+      if (!isGroup) return [];
+      try {
+        const md = await sock.groupMetadata(threadId);
+        return md.participants.map((p) => p.id);
+      } catch (e) {
+        logger.error(e);
+        return [];
+      }
+    },
+    getAdmins: async () => {
+      if (!isGroup) return [];
+      try {
+        const md = await sock.groupMetadata(threadId);
+        return md.participants.filter((p) => p.admin).map((p) => p.id);
+      } catch (e) {
+        logger.error(e);
+        return [];
+      }
+    },
+    kick: async (userId) => {
+      if (!isGroup) return false;
+      try {
+        await sock.groupParticipantsUpdate(threadId, [userId], "remove");
+        return true;
+      } catch (e) {
+        logger.error(e);
+        return false;
+      }
+    },
+    add: async (userId) => {
+      if (!isGroup) return false;
+      try {
+        await sock.groupParticipantsUpdate(threadId, [userId], "add");
+        return true;
+      } catch (e) {
+        logger.error(e);
+        return false;
+      }
+    },
+  };
+}
+
+function makeRoleHelpers(sender, threadId, isGroup, sock, db, config, logger) {
+  const getRole = async (userId) => {
+    const uid = userId || sender;
+    if (isAdmin(uid, config)) return 2;
+    if (isGroup) {
+      try {
+        const md = await sock.groupMetadata(threadId);
+        const p = md.participants.find((x) => x.id === uid);
+        if (p && (p.admin === "admin" || p.admin === "superadmin")) return 1;
+      } catch (e) {
+        logger.error(e);
+      }
+    }
+    const d = await DataUtils.getUser(uid);
+    return d.moderator ? 1 : 0;
+  };
+  const hasPermission = async (requiredRole) => {
+    const r = await getRole();
+    if (r === 2) return true;
+    if (r === 1 && requiredRole <= 1) return true;
+    if (r === 0 && requiredRole === 0) return true;
+    return false;
+  };
+  return {
+    getRole,
+    hasPermission,
+    promote: async (uid) => await DataUtils.updateUser(uid || sender, { moderator: true }),
+    demote: async (uid) => await DataUtils.updateUser(uid || sender, { moderator: false }),
+    isAdmin: (uid) => isAdmin(uid || sender, config),
+    isModerator: async (uid) => {
+      const d = await DataUtils.getUser(uid || sender);
+      return d.moderator || false;
+    },
+  };
+}
+
+async function safeInvoke(fn) {
+  try {
+    return await fn();
+  } catch (err) {
+    console.error("SafeInvoke error:", err);
   }
 }

@@ -1,13 +1,10 @@
-// Corrected the path to be relative
-const { sleep } = require("@/libs/utils");
-
 module.exports = {
   config: {
     name: "ping",
     aliases: ["p"],
     version: "1.0",
     author: "@anbuinfosec",
-    countDown: 5,
+    countDown: 0,
     role: 0, 
     description: "Check bot's response time.",
     category: "Utility",
