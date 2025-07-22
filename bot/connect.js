@@ -13,7 +13,7 @@ const config = require("../config.json");
 const { logger } = require("../libs/logger");
 const { loadPlugins } = require("./loader");
 const messageHandler = require("./handler");
-const AuthManager = require("./auth");
+const AuthManager = require("./auth/authManager");
 const fs = require("fs-extra");
 const path = require("path");
 

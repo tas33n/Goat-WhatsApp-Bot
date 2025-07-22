@@ -2,7 +2,7 @@ const inquirer = require("inquirer")
 const chalk = require("chalk")
 const fs = require("fs-extra")
 const path = require("path")
-const { logger } = require("../libs/logger")
+const { logger } = require("@/libs/logger")
 
 class AuthManager {
   constructor() {
