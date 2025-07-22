@@ -190,6 +190,7 @@ module.exports = async ({ sock, msg, config, db, logger }) => {
       if (eventHandler.config?.type === "chat" || eventHandler.onChat) {
         try {
           const eventParams = {
+            sock,
             api,
             message,
             body,
@@ -219,6 +220,7 @@ module.exports = async ({ sock, msg, config, db, logger }) => {
       if (command.onChat) {
         try {
           const commandParams = {
+            sock,
             api,
             message,
             body,
@@ -270,6 +272,7 @@ module.exports = async ({ sock, msg, config, db, logger }) => {
           if (command.onReply) {
             try {
               const replyParams = {
+                sock,
                 api,
                 message,
                 body,
@@ -413,6 +416,7 @@ module.exports = async ({ sock, msg, config, db, logger }) => {
 
     // Create comprehensive command parameters
     const commandParams = {
+      sock,
       event,
       api,
       message,
