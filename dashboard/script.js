@@ -129,11 +129,11 @@ function verifyOTP() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            localStorage.setItem('authToken', data.token);
-            showAlert('Login successful!', 'success');
+            localStorage.setItem('authToken', data.sessionId);
             showDashboard();
+            showAlert('Login successful!', 'success');
         } else {
-            showAlert(data.message || 'Invalid OTP', 'error');
+            showAlert(data.message || 'Invalid password', 'error');
         }
     })
     .catch(error => {
