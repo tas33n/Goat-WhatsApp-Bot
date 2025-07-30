@@ -24,3 +24,4 @@ bot/auth.dev.js
 bot/connect.dev.js
 bot/handler.dev.js
 config.json
+x.sh

@@ -30,6 +30,7 @@
     "moment-timezone": "^0.6.0",
     "mongodb": "^6.5.0",
     "mysql2": "^3.9.1",
+    "node-simipro": "^2.0.2",
     "pino": "^9.7.0",
     "qrcode": "^1.5.4",
     "qrcode-terminal": "^0.12.0",
