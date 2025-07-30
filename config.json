@@ -1,8 +1,8 @@
 {
-  "botName": "GoatBot",
+  "botName": "GoatWpBot",
   "prefix": ".",
   "skipSync": true,
-  "admins": ["8801600000000@s.whatsapp.net"],
+  "admins": ["8801000000000@s.whatsapp.net"],
   "dashboard": {
     "enabled": true,
     "port": 3000,
@@ -30,6 +30,13 @@
       "path": "database.db"
     }
   },
+  "apikeys": {
+    "anbu": "",
+    "anbu_note": "Get anbu API key from https://api.anbuinfosec.xyz",
+    "gemini": "",
+    "gemini_note": "Get Gemini API key from https://ai.google.com/auth"
+  },
+  "simiLang": "en",
   "logCommands": true,
   "antiInbox": false,
   "whitelist": [],

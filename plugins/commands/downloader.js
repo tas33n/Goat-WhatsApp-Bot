@@ -26,7 +26,7 @@ module.exports = {
     }
 
     await react("⏳");
-    const apikey = ""; // set your API key here or via env variable. Get one from https://api.anbuinfosec.xyz/
+    const apikey = global.GoatBot.config.apikeys?.anbu;
     if (!apikey) {
       await react("❌");
       return reply(
