@@ -32,7 +32,6 @@ With clean, fully readable code (no obfuscation or encryption), this project is 
 
 > **🎯 Built for Developers. Shared with the Community.**
 
-
 ---
 
 ## 📋 Features
@@ -117,13 +116,13 @@ module.exports = {
     author: "Tas33n",
     cooldown: 5,
     role: 0,
-    category: "utility"
+    category: "utility",
   },
   onCmd: async ({ reply }) => {
     reply("Pong!");
-  }
+  },
 };
-````
+```
 
 ### 🧠 Event Listener Example
 
@@ -133,19 +132,20 @@ module.exports = {
   config: {
     name: "welcome",
     author: "Anbuinfosec",
-    category: "events"
+    category: "events",
   },
   onEvent: async ({ api, event }) => {
     if (event.action !== "add") return;
     for (const user of event.participants) {
       api.sendMessage(event.id, {
         text: `👋 Welcome @${user.split("@")[0]}`,
-        mentions: [user]
+        mentions: [user],
       });
     }
-  }
+  },
 };
 ```
+
 For detailed documentation, see [DOCS.md](./DOCS.md)
 
 ---
@@ -155,16 +155,23 @@ For detailed documentation, see [DOCS.md](./DOCS.md)
 <details>
 <summary>🤖 Bot Commands</summary>
 
-* **Bot sample commands** <img src="https://i.postimg.cc/HsptyzGZ/photo-2025-07-20-14-50-50.jpg" width="400px">
+- **Bot sample commands** <img src="https://i.postimg.cc/HsptyzGZ/photo-2025-07-20-14-50-50.jpg" width="400px">
 
 </details>
 
 <details>
 <summary>📊 Dashboard UI</summary>
 
-* **Admin Login Page** <img src="https://i.postimg.cc/sxz4K9M2/photo-2025-07-20-14-50-46.jpg" width="400px">
-* **Bot Dashboard** <img src="https://i.postimg.cc/MHYbLMBm/photo-2025-07-20-14-50-36.jpg" width="400px">
-* **Admin command dashboard** <img src="https://i.postimg.cc/Pfb4Jc7v/photo-2025-07-20-14-50-42.jpg" width="400px">
+- **Admin Login Page** <img src="https://i.postimg.cc/sxz4K9M2/photo-2025-07-20-14-50-46.jpg" width="400px">
+- **Bot Dashboard** <img src="https://i.postimg.cc/MHYbLMBm/photo-2025-07-20-14-50-36.jpg" width="400px">
+- **Admin command dashboard** <img src="https://i.postimg.cc/Pfb4Jc7v/photo-2025-07-20-14-50-42.jpg" width="400px">
+
+</details>
+
+<details>
+<summary>Video Guide</summary>
+
+<iframe src="https://www.facebook.com/plugins/video.php?height=350&href=https%3A%2F%2Fwww.facebook.com%2Fanbuinfosec%2Fvideos%2F1082816610010705%2F&show_text=false&width=560&t=0" width="560" height="350" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowFullScreen="true"></iframe>
 
 </details>
 
@@ -190,16 +197,16 @@ Let’s build better tools — together.
 
 ## 🙌 Authors
 
-* 👨‍💻 Lead Author: [Tas33n](https://github.com/tas33n)
-* 🛡 Co-Author: [Anbuinfosec](https://github.com/Anbuinfosec)
+- 👨‍💻 Lead Author: [Tas33n](https://github.com/tas33n)
+- 🛡 Co-Author: [Anbuinfosec](https://github.com/Anbuinfosec)
 
 ---
 
 ## 🙏 Acknowledgements
 
-* 🐐 [GoatBot V2](https://github.com/ntkhang03/Goat-Bot-V2) – A Messenger chatbot project that inspired the modular plugin-based architecture and command flow.
-* 📡 [Baileys](https://github.com/WhiskeySockets/Baileys) – For their awesome WhatsApp Web API library that powers the bot.
-* 🤖 [ChatGPT](https://openai.com/chatgpt) – For help with writing, refactoring, and improving documentation, Docker setup, and best practices.
+- 🐐 [GoatBot V2](https://github.com/ntkhang03/Goat-Bot-V2) – A Messenger chatbot project that inspired the modular plugin-based architecture and command flow.
+- 📡 [Baileys](https://github.com/WhiskeySockets/Baileys) – For their awesome WhatsApp Web API library that powers the bot.
+- 🤖 [ChatGPT](https://openai.com/chatgpt) – For help with writing, refactoring, and improving documentation, Docker setup, and best practices.
 
 ---
 
@@ -208,15 +215,19 @@ Let’s build better tools — together.
 If you find this project helpful and want to support further development, donations are appreciated 🙏
 
 ### 🏦 Binance Pay
+
 Binance ID: **471390205**
 
 ### 💵 USDT (TRC-20)
+
 `TR95UPDfsB1Ammyj4w62xDuAJEA8wH5GSz`
 
 ### 💸 Litecoin (LTC)
+
 `LeaKUHCiAhRa6U3jrQa4bCAvaAfniJ6pXP`
 
 ### 💸 Bitcoin (BTC)
+
 `16NyoNtkDk8uHejqNsKkhpc8RyPEEfu1m9`
 
 ---
