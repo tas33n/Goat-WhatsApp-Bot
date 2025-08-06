@@ -1,248 +1,166 @@
-const fs = require("fs-extra");
-const path = require("path");
-const DataUtils = require("../../libs/dataUtils");
+const fs = require('fs');
+const path = require('path');
 
 module.exports = {
   config: {
     name: "help",
-    aliases: ["menu", "h", "commands", "cmd"],
-    version: "1.18",
+    aliases: ["h", "menu", "commands"],
+    description: "Display list of available commands or command details",
+    guide: [
+      "{pn}help <command> → Show details for a specific command",
+      "{pn}help → Show all available commands"
+    ],
     author: "@anbuinfosec",
-    countDown: 5,
     role: 0,
-    shortDescription: {
-      vi: "Xem cách dùng lệnh",
-      en: "View command usage",
-    },
-    longDescription: {
-      vi: "Xem cách sử dụng của các lệnh",
-      en: "View command usage",
-    },
-    category: "info",
-    guide: {
-      vi:
-        "   {pn} [để trống | <số trang> | <tên lệnh>]" +
-        "\n   {pn} <command name> [-u | usage | -g | guide]: chỉ hiển thị phần hướng dẫn sử dụng lệnh" +
-        "\n   {pn} <command name> [-i | info]: chỉ hiển thị phần thông tin về lệnh" +
-        "\n   {pn} <command name> [-r | role]: chỉ hiển thị phần quyền hạn của lệnh" +
-        "\n   {pn} <command name> [-a | alias]: chỉ hiển thị phần tên viết tắt của lệnh",
-      en:
-        "{pn} [empty | <page number> | <command name>]" +
-        "\n   {pn} <command name> [-u | usage | -g | guide]: only show command usage" +
-        "\n   {pn} <command name> [-i | info]: only show command info" +
-        "\n   {pn} <command name> [-r | role]: only show command role" +
-        "\n   {pn} <command name> [-a | alias]: only show command alias",
-    },
-    priority: 1,
+    cooldown: 3,
+    countDown: 3,
+    category: "info"
   },
 
-  langs: {
-    en: {
-      help:
-        "%1𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖⧕\nCurrently, the bot has %2 commands that can be used\n» Type %3help <command name> to view the details of how to use that command\n» %4\n𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖⧕",
-      commandNotFound: 'დ Command "%1" does not exist',
-      getInfoCommand:
-        "➟ Name: %1\n➟ Aliases: %2\n➟ Version: %3\n➟ Role: %4\n➟ Info: %5\n╭───── Guide ⭔\n╰ ◈ %6",
-      onlyInfo:
-        "╭─── Help Menu ⭔\n╰ ◈ Name: %1\n╰ ◈ Aliases: %2\n╰ ◈ Version %3\n╰ ◈ Role: %4\n╰ ◈ Info: %5\n",
-      onlyUsage: "𝄖𝄖𝄖𝄖𝄖⌜Usage⌟𝄖𝄖𝄖𝄖𝄖⧕\nდ %1\n𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖𝄖⧕",
-      onlyAlias:
-        "╭───── ALIAS ⭔\n╰ ◈ Other names: %1\n╰ ◈ Other names in your group: %2",
-      onlyRole: "╭───── ROLE ⭔\n╰ ◈ Role: %1",
-      doNotHave: "Not provided!",
-      roleText0: "0 (All users)",
-      roleText1: "1 (Group admins)",
-      roleText2: "2 (Bot admin)",
-      roleText0setRole: "0 (set role, all users)",
-      roleText1setRole: "1 (set role, group administrators)",
-      pageNotFound: "Page %1 does not exist",
-    },
-  },
-
-  onCmd: async function ({ api, message, args, db, logger, config, reply, event }) {
+  onStart: async ({ reply, event, args, user, role, utils, getLang }) => {
     try {
-      console.log(event)
-      const senderJid = event.senderID;
-      const threadID = event.threadID;
-      const { isAdmin } = require("../../libs/utils");
-      const role = isAdmin(senderJid, config) ? 2 : 0;
-      const prefix = config.prefix;
-      const nickNameBot = config.botName || "GoatBot";
-      
-      const commands = global.GoatBot.commands;
-      const aliases = global.GoatBot.aliases;
-      
-      const commandName = (args[0] || "").toLowerCase();
-      const command = commands.get(commandName) || commands.get(aliases.get(commandName));
-
-      // Helper function to get language strings
-      const getLang = (key, ...params) => {
-        let text = this.langs.en[key] || key;
+      const getText = getLang || ((key, ...params) => {
+        const texts = {
+          noPermission: "❌ You don't have permission to view this command",
+          commandNotFound: "❌ Command '%1' not found",
+          commandsList: "📋 Available Commands",
+          commandDetails: "📖 Command Details",
+          usage: "🔧 Usage: %1",
+          aliases: "🔗 Aliases: %1",
+          description: "📝 Description: %1",
+          cooldown: "⏱️ Cooldown: %1 seconds",
+          role: "🔑 Required role: %1",
+          category: "📂 Category: %1",
+          totalCommands: "Currently, the bot has %1 commands that can be used",
+          prefix: "» Type %1help <command name> to view the details of how to use that command",
+          noAliases: "None",
+          noDescription: "No description",
+          roleNames: ['👤 User', '🛡️ Moderator', '👑 Admin']
+        };
+        let text = texts[key] || key;
         params.forEach((param, index) => {
           text = text.replace(new RegExp(`%${index + 1}`, 'g'), param);
         });
         return text;
-      };
+      });
 
-      // Check if user is banned
-      const userData = await DataUtils.getUser(senderJid);
-      if (userData.banned) {
-        return reply(`🚫 You are banned from using this bot.\n\nReason: ${userData.banReason || "No reason provided"}\nBan Date: ${userData.banDate ? new Date(userData.banDate).toLocaleString() : "Unknown"}`);
-      }
+      const currentUser = await user.getUser();
+      const userRole = await role.getRole();
+      const prefix = global.GoatBot.prefix || utils.getPrefix();
+      const botName = global.GoatBot.config?.botName || "GoatBot";
 
-      // Check user warnings
-      if (userData.warnings >= 3) {
-        return reply(`⚠️ You have ${userData.warnings} warnings. Please be careful with your behavior.`);
-      }
+      if (args[0]) {
+        // Show specific command details
+        const commandName = args[0].toLowerCase();
+        const command = global.GoatBot.commands.get(commandName) || 
+                        global.GoatBot.commands.get(global.GoatBot.aliases.get(commandName));
 
-      // ———————————————— LIST ALL COMMAND ——————————————— //
-      if ((!command && !args[0]) || !isNaN(args[0])) {
-        const arrayInfo = [];
-        let msg = "";
-
-        for (const [, value] of commands) {
-          if (value.config.role > 1 && role < value.config.role) continue; // if role of command > role of user => skip
-          const indexCategory = arrayInfo.findIndex(
-            (item) =>
-              (item.category || "NO CATEGORY") ==
-              (value.config.category?.toLowerCase() || "NO CATEGORY")
-          );
-
-          if (indexCategory != -1)
-            arrayInfo[indexCategory].names.push(value.config.name);
-          else
-            arrayInfo.push({
-              category: value.config.category?.toLowerCase() || "NO CATEGORY",
-              names: [value.config.name],
-            });
+        if (!command) {
+          return await reply(getText('commandNotFound', commandName));
         }
-        arrayInfo.sort((a, b) => (a.category < b.category ? -1 : 1));
-        arrayInfo.forEach((data, index) => {
-          const categoryUpcase = `${
-            index == 0 ? `╭` : `╭──`
-          }─── ${data.category.toUpperCase()} ${index == 0 ? "⭓" : "⭔"}`;
-          data.names = data.names.sort().map((item) => (item = `╰ ◈ ${item}`));
-          msg += `${categoryUpcase}\n${data.names.join("\n")}\n`;
-        });
-        
-        // Get user's name for the help message
-        const userName = userData.name || "User";
-        const userGreeting = `Hello ${userName}! 👋\n\n`;
-        
-        const helpMessage = getLang("help", userGreeting + msg, commands.size, prefix, nickNameBot);
-        const msgSend = await reply(helpMessage);
-        
-        // Auto-delete after 3 minutes
-        setTimeout(async () => {
-          try {
-            if (msgSend && msgSend.key) {
-              await api.sendMessage(threadID, { delete: msgSend.key });
-            }
-          } catch (error) {
-            console.log("Error deleting message:", error);
-          }
-        }, 180000);
-      }
-      // ———————————— COMMAND DOES NOT EXIST ———————————— //
-      else if (!command && args[0]) {
-        return reply(getLang("commandNotFound", args[0]));
-      }
-      // ————————————————— INFO COMMAND ————————————————— //
-      else {
-        const configCommand = command.config;
 
-        let guide = configCommand.guide?.en || configCommand.guide || "No guide provided";
-        if (typeof guide == "string") guide = { body: guide };
-        const guideBody = guide.body
-          .replace(/\{prefix\}|\{p\}/g, prefix)
-          .replace(/\{name\}|\{n\}/g, configCommand.name)
-          .replace(/\{pn\}/g, prefix + configCommand.name);
+        if (command.config.role > userRole) {
+          return await reply(getText('noPermission'));
+        }
 
-        const aliasesString = configCommand.aliases
-          ? configCommand.aliases.join(", ")
-          : getLang("doNotHave");
-        const aliasesThisGroup = getLang("doNotHave"); // Can be expanded for group-specific aliases
+        const c = command.config;
 
-        let roleOfCommand = configCommand.role;
-        const roleText =
-          roleOfCommand == 0
-            ? getLang("roleText0")
-            : roleOfCommand == 1
-            ? getLang("roleText1")
-            : getLang("roleText2");
+        const roleName = getText("roleNames")[c.role] || `Level ${c.role}`;
+        const aliases = c.aliases && c.aliases.length ? c.aliases.join(", ") : getText("noAliases");
+        const description = c.description || getText("noDescription");
 
-        const description = configCommand.description || configCommand.longDescription?.en || getLang("doNotHave");
-
-        let formSendMessage = {};
-        let sendWithAttachment = false;
-
-        if (args[1]?.match(/^-g|guide|-u|usage$/)) {
-          formSendMessage.body = getLang(
-            "onlyUsage",
-            guideBody.split("\n").join("\n╰ ◈  ")
-          );
-          sendWithAttachment = true;
-        } else if (args[1]?.match(/^-a|alias|aliase|aliases$/)) {
-          formSendMessage.body = getLang(
-            "onlyAlias",
-            aliasesString,
-            aliasesThisGroup
-          );
-        } else if (args[1]?.match(/^-r|role$/)) {
-          formSendMessage.body = getLang("onlyRole", roleText);
-        } else if (args[1]?.match(/^-i|info$/)) {
-          formSendMessage.body = getLang(
-            "onlyInfo",
-            configCommand.name,
-            aliasesString,
-            configCommand.version || "1.0.0",
-            roleText,
-            description
-          );
+        let guideContent = c.guide || c.guide?.en || c.guide?.vi || "";
+        if (Array.isArray(guideContent)) {
+          guideContent = guideContent.map(line => line.trim()).join("\n");
+        } else if (typeof guideContent === "string") {
+          guideContent = guideContent.trim();
         } else {
-          formSendMessage.body = getLang(
-            "getInfoCommand",
-            configCommand.name,
-            aliasesString,
-            configCommand.version || "1.0.0",
-            roleText,
-            description,
-            guideBody.split("\n").join("\n╰ ◈ ")
-          );
-          sendWithAttachment = true;
+          guideContent = "";
         }
+        guideContent = guideContent.replace(/\{pn\}/g, prefix);
 
-        const msgSend = await reply(formSendMessage.body);
-        
-        // Auto-delete after 3 minutes
-        setTimeout(async () => {
-          try {
-            if (msgSend && msgSend.key) {
-              await api.sendMessage(threadID, { delete: msgSend.key });
-            }
-          } catch (error) {
-            console.log("Error deleting message:", error);
-          }
-        }, 180000);
+        let details = `${getText('commandDetails')}\n\n`;
+        details += `🏷️ **${c.name}**\n`;
+        details += `${getText('description', description)}\n`;
+        details += `${getText('role', roleName)}\n`;
+        details += `${getText('cooldown', c.cooldown || c.countDown || 3)}\n`;
+        details += `${getText('category', c.category || 'general')}\n`;
+        details += `${getText('aliases', aliases)}\n\n`;
+        details += `${getText('usage', guideContent)}`;
+
+        return await reply(details);
       }
+
+      // Show all commands grouped by category
+      const commands = Array.from(global.GoatBot.commands.values());
+      const categories = {};
+
+      commands.forEach(cmd => {
+        if (cmd.config.role <= userRole) {
+          const category = (cmd.config.category || 'general').toLowerCase();
+          if (!categories[category]) categories[category] = [];
+          categories[category].push({
+            name: cmd.config.name,
+            description: cmd.config.description || 'No description',
+            aliases: cmd.config.aliases || []
+          });
+        }
+      });
+
+      let helpMessage = "";
+
+      // Sort categories alphabetically, but keep 'admin' first if exists
+      const sortedCategories = Object.keys(categories).sort((a, b) => {
+        if (a === 'admin') return -1;
+        if (b === 'admin') return 1;
+        return a.localeCompare(b);
+      });
+
+      sortedCategories.forEach((category, index) => {
+        const categoryCommands = categories[category];
+        const categoryEmoji = getCategoryEmoji(category);
+
+        // Use different border symbol for the first category
+        const topBorder = index === 0 ? '╭───' : '╭─────';
+        const bottomSymbol = index === 0 ? '⭓' : '⭔';
+
+        helpMessage += `${topBorder} ${category.toUpperCase()} ${bottomSymbol}\n`;
+
+        categoryCommands.forEach(cmd => {
+          helpMessage += `╰ ◈ ${cmd.name}\n`;
+        });
+      });
+
+      // Add footer styling
+      helpMessage += "𝄖".repeat(15) + "⧕\n";
+      helpMessage += `${getText('totalCommands', Object.values(categories).flat().length)}\n`;
+      helpMessage += `${getText('prefix', prefix)}\n`;
+      helpMessage += `» ${botName}\n`;
+      helpMessage += "𝄖".repeat(15) + "⧕";
+
+      await reply(helpMessage);
+
     } catch (error) {
-      logger.error("Error in help command:", error);
-      await reply("❌ An error occurred while generating the help message.");
+      console.error("Error in help command:", error);
+      await reply("❌ An error occurred while retrieving help information.");
     }
   }
 };
 
-function checkLangObject(data, langCode) {
-  if (typeof data == "string") return data;
-  if (typeof data == "object" && !Array.isArray(data))
-    return data[langCode] || data.en || undefined;
-  return undefined;
-}
-
-function cropContent(content, max) {
-  if (content.length > max) {
-    content = content.slice(0, max - 3);
-    content = content + "...";
-  }
-  return content;
+function getCategoryEmoji(category) {
+  const emojiMap = {
+    'admin': '👑',
+    'info': 'ℹ️',
+    'utility': '🔧',
+    'fun': '🎉',
+    'moderation': '🛡️',
+    'game': '🎮',
+    'music': '🎵',
+    'image': '🖼️',
+    'economy': '💰',
+    'general': '📝',
+    'system': '⚙️',
+    'owner': '👤'
+  };
+  return emojiMap[category.toLowerCase()] || '📂';
 }

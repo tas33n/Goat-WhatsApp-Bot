@@ -25,26 +25,26 @@ const GoatConfig = require("./libs/goatConfig");
 let restartAttempts = 0;
 const MAX_RESTART_ATTEMPTS = 3;
 
-const banner = `
- ██████╗  █████╗  █████╗ ████████╗ ██╗   ██╗  ███╗
-██╔════╝ ██╔══██╗██╔══██╗╚══██╔══╝ ██║   ██║ ████║
-██║  ██╗ ██║  ██║███████║   ██║    ╚██╗ ██╔╝██╔██║
-██║  ╚██╗██║  ██║██╔══██║   ██║     ╚████╔╝ ╚═╝██║
- ╚██████╔╝╚█████╔╝██║  ██║   ██║      ╚██╔╝  ███████╗
-  ╚═════╝  ╚════╝ ╚═╝  ╚═╝   ╚═╝       ╚═╝   ╚══════╝
-    Created by @anbuinfosec & @tas33n
-`;
-
-const compactBanner = `
-█▀▀ █▀█ ▄▀█ ▀█▀   █▄▄ █▀█ ▀█▀   █ █ ▄█
-█▄█ █▄█ █▀█  █    █▄█ █▄█  █    ▀▄▀  █
-Created by @anbuinfosec & @tas33n
-`;
-
 const gradient = require("gradient-string");
 
+const bannerLines = [
+  " ██████╗  █████╗  █████╗ ████████╗ ██╗   ██╗  ███╗",
+  "██╔════╝ ██╔══██╗██╔══██╗╚══██╔══╝ ██║   ██║ ████║",
+  "██║  ██╗ ██║  ██║███████║   ██║    ╚██╗ ██╔╝██╔██║",
+  "██║  ╚██╗██║  ██║██╔══██║   ██║     ╚████╔╝ ╚═╝██║",
+  "╚██████╔╝╚█████╔╝██║  ██║   ██║      ╚██╔╝  ███████╗",
+  "╚═════╝  ╚════╝ ╚═╝  ╚═╝   ╚═╝       ╚═╝   ╚══════╝",
+  "    Created by @anbuinfosec & @tas33n"
+];
+
+const compactBannerLines = [
+  "█▀▀ █▀█ ▄▀█ ▀█▀   █▄▄ █▀█ ▀█▀   █ █ ▄█",
+  "█▄█ █▄█ █▀█  █    █▄█ █▄█  █    ▀▄▀  █",
+  "Created by @anbuinfosec & @tas33n"
+];
+
 function centerText(text, length) {
-  const width = process.stdout.columns;
+  const width = process.stdout.columns || 80;
   const leftPadding = Math.floor((width - (length || text.length)) / 2);
   const rightPadding = width - leftPadding - (length || text.length);
   const paddedString =
@@ -56,16 +56,16 @@ function centerText(text, length) {
 
 function createLine(content, isMaxWidth = false) {
   const widthConsole =
-    process.stdout.columns > 50 ? 50 : process.stdout.columns;
+    process.stdout.columns > 50 ? 50 : process.stdout.columns || 50;
   if (!content) {
-    return Array(isMaxWidth ? process.stdout.columns : widthConsole)
+    return Array(isMaxWidth ? (process.stdout.columns || 50) : widthConsole)
       .fill("─")
       .join("");
   } else {
     content = ` ${content.trim()} `;
     const lengthContent = content.length;
     const lengthLine = isMaxWidth
-      ? process.stdout.columns - lengthContent
+      ? (process.stdout.columns || 50) - lengthContent
       : widthConsole - lengthContent;
     let left = Math.floor(lengthLine / 2);
     if (left < 0 || isNaN(left)) left = 0;
@@ -82,17 +82,16 @@ function printBanner() {
   console.log();
 
   // Choose banner based on console width
-  const maxWidth = process.stdout.columns;
-  const selectedBanner = maxWidth > 60 ? banner : compactBanner;
+  const maxWidth = process.stdout.columns || 80;
+  const selectedBanner = maxWidth > 60 ? bannerLines : compactBannerLines;
 
-  // Print main banner
-  const bannerLines = selectedBanner.trim().split("\n");
-  for (const line of bannerLines) {
+  // Print main banner line by line with gradient
+  for (const line of selectedBanner) {
     const textColor = gradient("#FA8BFF", "#2BD2FF", "#2BFF88")(line);
     centerText(textColor, line.length);
   }
 
-  // Print subtitle
+  // Print subtitle lines with wrapping
   const currentVersion = require("./package.json").version;
   const vvv = currentVersion.charAt(0);
 
@@ -113,8 +112,7 @@ function printBanner() {
   }
 
   const author = "Created by @anbuinfosec & @tas33n with ♡";
-  const srcUrl =
-    "Source code: https://github.com/anbuinfosec/Goat-WhatsApp-Bot";
+  const srcUrl = "Source code: https://github.com/anbuinfosec/Goat-WhatsApp-Bot";
   const supportMsg = "FOR EDUCATIONAL PURPOSES ONLY";
 
   for (const t of subTitleArray) {
@@ -131,6 +129,7 @@ function printBanner() {
 }
 
 printBanner();
+
 
 // Global runtime state
 global.GoatBot = {

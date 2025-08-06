@@ -199,7 +199,7 @@ module.exports = async function handleMessage({ sock, event, msg, config, db, lo
     if (!(await role.hasPermission(command.config.role))) return reply("❌ You lack permissions.");
 
     // Cooldown per command
-    const cd = command.config.countDown || 0;
+    const cd = command.config.countDown || command.config.cooldown || 0;
     if (cd > 0) {
       if (!cooldowns.has(command.config.name)) cooldowns.set(command.config.name, new Map());
       const map = cooldowns.get(command.config.name);
